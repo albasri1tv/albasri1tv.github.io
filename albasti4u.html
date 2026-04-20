@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>مسلسلات وافلام البصري تيفي </title>
+    <title>مسلسلات وافلام البصري تيفي </title>
 
     <meta name="description" content="المنصة الرسمية للبصري تي في - شاهد أحدث المسلسلات والأفلام العربية، التركية، الأجنبية، الهندية والآسيوية بجودة عالية.">
     <meta name="keywords" content="البصري تي في, مسلسلات 2026, أفلام 2026, مسلسلات رمضان, روميو, مسلسلات تركية, مسلسلات تركية مترجمة, مسلسلات عربية, مسلسلات أجنبية, مسلسلات هندية, مسلسلات آسيوية, أفلام عربية, أفلام أجنبية مترجمة, أفلام تركية, أفلام هندية, أفلام آسيوية, مشاهدة مسلسلات مجانا, تحميل أفلام, موقع البصري للمسلسلات, Albasri TV">
@@ -45,6 +45,7 @@
         .card-title { position: absolute; bottom: 0; width: 100%; padding: 15px 10px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); text-align: center; font-size: 14px; font-weight: 700; color: #fff; z-index: 3; }
         .pagination { display: flex; justify-content: center; align-items: center; gap: 15px; margin: 40px 0; flex-wrap: wrap; }
         .pag-btn { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+        .pag-btn:hover { background: var(--main); color: white; }
         .pag-number { background: var(--main); color: #fff; padding: 10px 20px; border-radius: 12px; font-weight: 900; }
         .player-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); padding: 20px; }
         .player-wrapper { width: 100%; max-width: 900px; background: var(--card); border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 1px solid var(--border); animation: zoomIn 0.3s ease; display: flex; flex-direction: column; }
@@ -91,7 +92,7 @@
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div class="logo">أقسام <span>البصري تيفي</span></div>
-        <i class="fas fa-times close-sidebar" onclick="toggleSidebar()"></i>
+        <i class="fas fa-times close-sidebar" onclick="toggleSidebar()" style="cursor:pointer"></i>
     </div>
     <div class="sidebar-links">
         <a href="#" onclick="showHome(); toggleSidebar();"><i class="fas fa-home"></i> الرئيسية</a>
@@ -163,9 +164,10 @@
     }
 
     function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('open');
+        const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+        sidebar.classList.toggle('open');
+        overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
     }
 
     function toggleMobileSearch() { document.getElementById('main-header').classList.toggle('search-active'); }
@@ -213,6 +215,7 @@
         document.getElementById('loader').style.display = 'block';
         document.getElementById('items-grid').innerHTML = '';
         document.getElementById('section-title').innerText = name;
+        
         fetch(`${API}?action=list&type=${type}&section=${sec}&page=${page}`)
         .then(res => res.json()).then(data => {
             document.getElementById('loader').style.display = 'none';
@@ -224,7 +227,7 @@
                 });
             }
             renderPagination();
-        });
+        }).catch(() => { document.getElementById('loader').style.display = 'none'; });
     }
 
     function renderPagination() {
@@ -249,23 +252,34 @@
 
     function loadEpisodes(url, image, title) {
         document.getElementById('loader').style.display = 'block';
-        fetch(`${API}?action=episodes&targetUrl=${encodeURIComponent(url)}`)
+        // تعديل: استخدام url بدلاً من targetUrl وتوقع مصفوفة مباشرة أو كائن
+        fetch(`${API}?action=episodes&url=${encodeURIComponent(url)}`)
         .then(res => res.json()).then(data => {
             document.getElementById('loader').style.display = 'none';
             document.getElementById('section-view').style.display = 'none';
             document.getElementById('eps-view').style.display = 'block';
             document.getElementById('series-title').innerText = title;
             const grid = document.getElementById('episodes-grid'); grid.innerHTML = '';
-            data.episodes.forEach(ep => {
-                grid.innerHTML += `<div class="custom-card" onclick="openPlayer('${ep.name}'); fetchAndPlay('${ep.episode_url}');"><div class="card-img" style="background-image: url('${image}')"></div><div class="card-play"><i class="fas fa-play"></i></div><div class="card-title">${ep.name}</div></div>`;
+            
+            // معالجة إذا كانت البيانات مصفوفة مباشرة
+            const episodes = Array.isArray(data) ? data : (data.episodes || []);
+            episodes.forEach(ep => {
+                grid.innerHTML += `<div class="custom-card" onclick="openPlayer('${ep.name}'); fetchAndPlay('${ep.url || ep.episode_url}');"><div class="card-img" style="background-image: url('${image}')"></div><div class="card-play"><i class="fas fa-play"></i></div><div class="card-title">${ep.name}</div></div>`;
             });
-        });
+        }).catch(() => { document.getElementById('loader').style.display = 'none'; });
     }
 
     function closeEps() { document.getElementById('eps-view').style.display = 'none'; document.getElementById('section-view').style.display = 'block'; }
-    function openPlayer(title) { document.getElementById('watch-modal').style.display = 'flex'; document.getElementById('video-title').innerText = title; document.getElementById('player-loading').style.display = 'flex'; }
+    
+    function openPlayer(title) { 
+        document.getElementById('watch-modal').style.display = 'flex'; 
+        document.getElementById('video-title').innerText = title; 
+        document.getElementById('player-loading').style.display = 'flex'; 
+        document.body.style.overflow = 'hidden';
+    }
+
     function fetchAndPlay(url) {
-        fetch(`${API}?action=watch&targetUrl=${encodeURIComponent(url)}`)
+        fetch(`${API}?action=watch&url=${encodeURIComponent(url)}`)
         .then(res => res.json()).then(data => {
             if(data.stream) {
                 player.source = { type: 'video', sources: [{ src: data.stream, type: 'video/mp4' }] };
@@ -275,7 +289,13 @@
             }
         });
     }
-    function closePlayer() { player.pause(); document.getElementById('watch-modal').style.display = 'none'; player.source = { type: 'video', sources: [] }; }
+
+    function closePlayer() { 
+        player.pause(); 
+        document.getElementById('watch-modal').style.display = 'none'; 
+        player.source = { type: 'video', sources: [] }; 
+        document.body.style.overflow = 'auto';
+    }
 </script>
 </body>
 </html>
