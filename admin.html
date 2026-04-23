@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المسؤول الاحترافية - روميو</title>
+    <style>
+        /* تم الحفاظ على نفس ستايل الألوان والخطوط الخاص بك تماماً */
+        :root{--bg:#0b1220;--card:rgba(17,24,39,.88);--card2:rgba(15,23,42,.96);--line:rgba(255,255,255,.08);--muted:#cbd5e1;--text:#fff;--primary:#38bdf8;--green:#10b981;--red:#ef4444;--amber:#f59e0b}
+        *{box-sizing:border-box} body{margin:0;padding:16px;color:var(--text);font-family:Tahoma,Arial,sans-serif;background:radial-gradient(circle at top right, rgba(56,189,248,.16), transparent 28%),var(--bg)}
+        .container{max-width:860px;margin:auto}
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin-bottom:18px;background:var(--card);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(12px)}
+        .page-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:18px}
+        .match-card{background:linear-gradient(180deg, rgba(30,41,59,.96), rgba(15,23,42,.96));border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px}
+        .match-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .team{width:35%;text-align:center}.team img{width:64px;height:64px;object-fit:contain}
+        .center{width:30%;text-align:center}.score{font-size:1.7rem;font-weight:900}.badge{display:inline-block;padding:5px 12px;border-radius:999px;font-size:.76rem;margin-top:8px;font-weight:900}
+        .input,select{width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--card2);color:var(--text);margin-bottom:10px;outline:none}
+        .btn{border:none;cursor:pointer;padding:10px 16px;border-radius:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;color:#fff}
+        .btn-blue{background:#3b82f6}.btn-green{background:var(--green)}.btn-red{background:var(--red)}
+        .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:9999}.modal.show{display:flex}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="topbar">
+        <div style="font-weight:900">لوحة المسؤول الاحترافية</div>
+        <button class="btn btn-red" onclick="location.reload()">خروج</button>
+    </div>
+
+    <div id="admin-content" style="display:none;">
+        <div id="matches-list">جاري جلب المباريات من API...</div>
+    </div>
+
+    <div class="modal show" id="loginModal">
+        <div class="page-card" style="width:320px; text-align:center">
+            <h3 style="margin-top:0">دخول المسؤول</h3>
+            <input type="password" id="adminCode" class="input" placeholder="أدخل الكود">
+            <button class="btn btn-blue" onclick="checkLogin()">دخول</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+    // إعدادات مشروعك فرسين العراق
+    const firebaseConfig = {
+        apiKey: "AIzaSyAGhmOqXWxmr2ULOzNMMDuLlxCeTmUNpis",
+        databaseURL: "https://frsin-araq-default-rtdb.firebaseio.com",
+        projectId: "frsin-araq",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function checkLogin() {
+        if(document.getElementById('adminCode').value === '9999') {
+            document.getElementById('loginModal').classList.remove('show');
+            document.getElementById('admin-content').style.display = 'block';
+            loadAPIMatches();
+        } else { alert('الكود غير صحيح'); }
+    }
+
+    async function loadAPIMatches() {
+        const date = new Date().toISOString().split('T')[0];
+        const res = await fetch(`https://api-ar.ysscores.com/api/matches/matches_date_get/${date}/%5B%2299376%22%5D/%5B%5D/%5B%228633%22%5D/IBA/180`);
+        const json = await res.json();
+        let html = '';
+        json.data.forEach(m => {
+            html += `
+            <div class="match-card">
+                <div class="match-head">
+                    <div class="team"><img src="https://imgs.ysscores.com/teams/64/${m.home_team.image}"><div>${m.home_team.title}</div></div>
+                    <div class="center"><div class="score">VS</div><div class="badge" style="background:#10b981">متاحة</div></div>
+                    <div class="team"><img src="https://imgs.ysscores.com/teams/64/${m.away_team.image}"><div>${m.away_team.title}</div></div>
+                </div>
+                <div style="margin-top:15px">
+                    <input type="text" id="url-${m.match_id}" class="input" placeholder="رابط سيرفر المباراة">
+                    <button class="btn btn-green" onclick="sendToUser('${m.match_id}', '${m.home_team.title}', '${m.away_team.title}', '${m.home_team.image}', '${m.away_team.image}')">إرسال للمشاهدين</button>
+                </div>
+            </div>`;
+        });
+        document.getElementById('matches-list').innerHTML = html;
+    }
+
+    function sendToUser(id, home, away, imgH, imgA) {
+        const streamUrl = document.getElementById(`url-${id}`).value;
+        if(!streamUrl) return alert('يرجى وضع رابط السيرفر');
+        db.ref('live_matches/' + id).set({
+            home, away, imgH, imgA, url: streamUrl, active: true
+        }).then(() => alert('تم الإرسال بنجاح!'));
+    }
+</script>
+</body>
+</html>
