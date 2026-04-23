@@ -3,53 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title> البصري تيغي للبث المياشر </title>
-  <meta name="description" content="مشاهدة مباريات اليوم بث مباشر بدون تقطيع، بث مباشر لجميع القنوات الرياضية، يلا شوت، كورة لايف، كورة ستار، بث مباشر HD لجميع المباريات.">
-
-<meta name="keywords" content="
-يلا شوت,
-yalla shoot,
-يلا شوت مباشر,
-yalla shoot live,
-كورة لايف,
-kora live,
-كورة ستار,
-koora star,
-كورة جول,
-kora goal,
-كورة اون لاين,
-kora online,
-يلا كورة,
-yalla kora,
-مباريات اليوم,
-matches today,
-بث مباشر,
-live streaming,
-بث مباشر مباريات,
-مشاهدة مباريات اليوم,
-بث مباشر بدون تقطيع,
-مشاهدة مباراة,
-live match,
-bein sport بث مباشر,
-قنوات بي ان سبورت,
-bein sport live,
-مشاهدة الدوري الانجليزي,
-مشاهدة الدوري الاسباني,
-مشاهدة دوري ابطال اوروبا,
-مشاهدة مباريات برشلونة,
-مشاهدة مباريات ريال مدريد,
-مشاهدة مباريات ليفربول,
-مشاهدة مباريات اليوم HD,
-مشاهدة مباريات مباشرة,
-live football,
-football live stream,
-soccer live,
-watch football online,
-free live streaming football
-">
-
-<meta name="author" content="BSR Player">
-<meta name="robots" content="index, follow">
+  <title>جدول المباريات</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1414,6 +1368,75 @@ video.addEventListener('error', ()=> showError('خطأ في الفيديو', 'ت
 updateMuteIcon();
 setCenterPlayIcon();
 updateProgress();
+</script>
+<script>
+/* حماية أساسية للواجهة - ملاحظة: لا توجد حماية 100% لأي كود HTML داخل المتصفح */
+(function () {
+  "use strict";
+
+  const allowedHosts = [
+    "localhost",
+    "127.0.0.1",
+    "frsin-araq.web.app",
+    "frsin-araq.firebaseapp.com"
+  ];
+
+  const allowGithubPages = true;
+  const host = location.hostname;
+  const isAllowedHost = allowedHosts.includes(host) || (allowGithubPages && host.endsWith(".github.io"));
+
+  if (!isAllowedHost && host !== "") {
+    document.documentElement.innerHTML = '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:0;background:#050914;color:#fff;font-family:Tahoma,Arial;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px"><div style="max-width:420px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:25px"><h2 style="margin-top:0">🚫 غير مسموح</h2><p>هذا الكود محمي ولا يعمل خارج الموقع الرسمي.</p><p style="opacity:.7;font-size:13px">Host: ' + host + '</p></div></body>';
+    throw new Error("Blocked domain: " + host);
+  }
+
+  const block = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  };
+
+  document.addEventListener("contextmenu", block, true);
+  document.addEventListener("selectstart", block, true);
+  document.addEventListener("dragstart", block, true);
+  document.addEventListener("copy", block, true);
+  document.addEventListener("cut", block, true);
+
+  document.addEventListener("keydown", function (e) {
+    const k = (e.key || "").toLowerCase();
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && k === "u") ||
+      (e.ctrlKey && k === "s") ||
+      (e.ctrlKey && k === "p") ||
+      (e.ctrlKey && k === "c") ||
+      (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(k))
+    ) {
+      return block(e);
+    }
+  }, true);
+
+  if (window.top !== window.self) {
+    try { window.top.location = window.self.location; } catch (e) { window.self.location = window.self.location; }
+  }
+
+  let devtoolsWarnings = 0;
+  setInterval(function () {
+    const start = performance.now();
+    debugger;
+    const diff = performance.now() - start;
+    if (diff > 160) {
+      devtoolsWarnings++;
+      if (devtoolsWarnings >= 2) {
+        const player = document.getElementById("player-root");
+        if (player) player.style.display = "none";
+        document.body.innerHTML = '<div style="height:100vh;background:#000;color:white;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Tahoma,Arial;padding:20px"><div><h2>تم إيقاف الصفحة للحماية</h2><p>يرجى إغلاق أدوات المطور وإعادة فتح الصفحة.</p></div></div>';
+      }
+    } else {
+      devtoolsWarnings = 0;
+    }
+  }, 2500);
+})();
 </script>
 </body>
 </html>
