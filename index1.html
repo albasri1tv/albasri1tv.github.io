@@ -1,28 +1,1361 @@
-
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>جدول المباريات</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0b1220;--card:rgba(17,24,39,.92);--card2:rgba(15,23,42,.96);--line:rgba(255,255,255,.10);--text:#fff;--muted:#cbd5e1;--blue:#38bdf8;--green:#10b981;--red:#ef4444}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;padding:14px;background:radial-gradient(circle at 90% 0,rgba(56,189,248,.18),transparent 28%),radial-gradient(circle at 5% 5%,rgba(16,185,129,.12),transparent 24%),var(--bg);font-family:Tajawal,Tahoma;color:var(--text)}.container{max-width:880px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:0 18px 45px rgba(0,0,0,.25);backdrop-filter:blur(12px);margin-bottom:16px}.title{font-size:19px;font-weight:900}.icon{width:44px;height:44px;border:0;border-radius:15px;background:var(--card2);border:1px solid var(--line);color:white;font-size:20px}.card{cursor:pointer;background:linear-gradient(180deg,rgba(30,41,59,.96),rgba(15,23,42,.96));border:1px solid var(--line);border-radius:24px;padding:16px;margin-bottom:15px;box-shadow:0 14px 35px rgba(0,0,0,.24);transition:.18s}.card:hover{transform:translateY(-2px);border-color:rgba(56,189,248,.45)}.match-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.team{width:35%;text-align:center}.team img{width:68px;height:68px;object-fit:contain}.team-name{font-weight:900;margin-top:7px;line-height:1.5}.center{width:30%;text-align:center}.time{font-size:18px;color:var(--blue);font-weight:900}.score{font-size:25px;font-weight:900}.badge{display:inline-flex;align-items:center;justify-content:center;margin-top:8px;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:900}.league{margin-top:11px;text-align:center;color:var(--muted);font-size:13px}.empty{text-align:center;padding:34px;background:var(--card);border:1px solid var(--line);border-radius:22px;color:var(--muted);line-height:1.9}.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.68);z-index:50;padding:15px}.modal.show{display:flex}.modal-box{width:min(420px,100%);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;text-align:center;box-shadow:0 25px 70px rgba(0,0,0,.45)}.modal-title{font-weight:900;font-size:20px;margin-bottom:8px}.modal-text{color:var(--muted);line-height:1.8}.btn{border:0;border-radius:13px;padding:11px 18px;background:#2563eb;color:white;font-family:Tajawal;font-weight:900;margin-top:12px}@media(max-width:700px){.team img{width:55px;height:55px}.team-name{font-size:13px}.card{padding:12px}.title{font-size:17px}}
-</style>
-</head><body>
-<div class="container">
-  <div class="topbar"><button class="icon" onclick="history.back()">→</button><div><div class="title">جدول المباريات</div><div style="color:#cbd5e1;font-size:13px">المباريات المرسلة من لوحة المسؤول</div></div><button class="icon" onclick="location.reload()">↻</button></div>
-  <div id="matches"></div>
-</div>
-<div class="modal" id="noServersModal"><div class="modal-box"><div class="modal-title">تنبيه</div><div class="modal-text">لا توجد سيرفرات مضافة لهذه المباراة حتى الآن.</div><button class="btn" onclick="closeNoServersModal()">حسناً</button></div></div>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>جدول المباريات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.13/shaka-player.compiled.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+  <meta name="referrer" content="no-referrer"/>
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:rgba(17,24,39,.88);
+      --card2:rgba(15,23,42,.96);
+      --line:rgba(255,255,255,.09);
+      --muted:#cbd5e1;
+      --text:#fff;
+      --primary:#38bdf8;
+      --green:#10b981;
+      --red:#ef4444;
+      --gray:#6b7280;
+    }
+
+    *{box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at top right, rgba(56,189,248,.16), transparent 28%),
+        radial-gradient(circle at top left, rgba(16,185,129,.10), transparent 24%),
+        var(--bg);
+      color:var(--text);
+      font-family:'Tajawal',Tahoma,Arial,sans-serif;
+    }
+
+    body.player-open{overflow:hidden}
+
+    .app-page{
+      max-width:860px;
+      margin:auto;
+      padding:16px;
+      padding-bottom:26px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 16px;
+      margin-bottom:18px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      box-shadow:0 14px 36px rgba(0,0,0,.24);
+      backdrop-filter:blur(12px);
+    }
+
+    .top-title{font-size:1.05rem;font-weight:900}
+    .top-sub{color:var(--muted);font-size:.82rem;margin-top:3px}
+
+    .icon-btn-page{
+      width:44px;
+      height:44px;
+      border:none;
+      cursor:pointer;
+      border-radius:14px;
+      background:var(--card2);
+      color:var(--text);
+      border:1px solid var(--line);
+      font-size:18px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .match-card{
+      background:linear-gradient(180deg, rgba(30,41,59,.96), rgba(15,23,42,.96));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      margin-bottom:14px;
+      box-shadow:0 14px 36px rgba(0,0,0,.24);
+      cursor:pointer;
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+    }
+
+    .match-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(56,189,248,.45);
+      box-shadow:0 20px 42px rgba(0,0,0,.3);
+    }
+
+    .match-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .team{width:35%;text-align:center}
+    .team img{width:64px;height:64px;object-fit:contain}
+    .team-name{font-size:.96rem;font-weight:800;margin-top:8px;line-height:1.5}
+    .center{width:30%;text-align:center}
+    .score{font-size:1.7rem;font-weight:900;direction:ltr}
+    .time{color:var(--primary);font-weight:900;font-size:1.08rem;direction:ltr}
+    .badge{
+      display:inline-block;
+      padding:5px 12px;
+      border-radius:999px;
+      font-size:.76rem;
+      margin-top:8px;
+      font-weight:900;
+      color:#fff;
+    }
+
+    .empty-message{
+      text-align:center;
+      background:var(--card);
+      padding:28px;
+      border-radius:20px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      line-height:1.8;
+    }
+
+    .toast-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.65);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:99999;
+      padding:16px;
+    }
+    .toast-modal.show{display:flex}
+    .toast-box{
+      width:min(420px,100%);
+      background:rgba(17,24,39,.98);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:0 24px 64px rgba(0,0,0,.4);
+      text-align:center;
+    }
+    .toast-title{font-size:1.05rem;font-weight:900;margin-bottom:10px}
+    .toast-text{color:var(--muted);font-size:.95rem;line-height:1.8}
+    .toast-btn{
+      margin-top:14px;
+      border:none;
+      background:#38bdf8;
+      color:#00131d;
+      padding:10px 18px;
+      border-radius:999px;
+      font-weight:900;
+      cursor:pointer;
+      font-family:'Tajawal',sans-serif;
+    }
+
+    /* ====== Player merged ====== */
+    #player-root{
+      position:fixed;
+      inset:0;
+      background:#000;
+      z-index:9999;
+      display:none;
+    }
+    #player-root.show{display:block}
+    .player-wrapper{position:relative;width:100%;height:100%;background:#000;overflow:hidden}
+    video{width:100%;height:100%;background:#000;object-fit:fill;filter:contrast(1.06) saturate(1.12);transition:transform .25s ease}
+    video.fit-contain{object-fit:contain!important}
+    video.fit-cover{object-fit:cover!important}
+    video.fit-fill{object-fit:fill!important}
+
+    #loading-spinner,#buffer-spinner{
+      position:absolute;
+      z-index:55;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+      display:none;
+      pointer-events:none;
+    }
+    #loading-spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff}
+    #buffer-spinner{width:92px;height:92px;border:6px solid rgba(255,255,255,.25);border-top-color:#fff}
+    @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+    #error-overlay{
+      position:absolute;
+      inset:0;
+      z-index:9999;
+      background:rgba(0,0,0,.92);
+      color:#fff;
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      text-align:center;
+      gap:12px;
+    }
+    .retry-btn{
+      border:none;
+      background:#fff;
+      color:#000;
+      font-family:'Tajawal',sans-serif;
+      font-weight:700;
+      padding:10px 14px;
+      border-radius:999px;
+      cursor:pointer;
+    }
+
+    .controls-overlay{position:absolute;inset:0;pointer-events:none}
+    .top-bar{
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      z-index:70;
+      padding:12px 14px;
+      background:linear-gradient(to bottom, rgba(0,0,0,.78), rgba(0,0,0,0));
+      opacity:0;
+      transform:translateY(-6px);
+      transition:.25s;
+      pointer-events:auto;
+    }
+    .top-bar.visible{opacity:1;transform:translateY(0)}
+    .top-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .top-left{display:flex;align-items:flex-start;gap:10px;flex:1;justify-content:space-between}
+    .top-btn{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:14px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter:blur(14px);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 10px 25px rgba(0,0,0,.28);
+    }
+    .top-btn i{color:#fff;width:20px;height:20px}
+    .stream-title{
+      color:#fff;
+      font-size:15px;
+      font-weight:600;
+      opacity:.95;
+      max-width:34vw;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .server-strip{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-start;
+      direction:ltr;
+      align-items:center;
+      margin-left:auto;
+    }
+    .server-btn{
+      border:none;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      color:#fff;
+      padding:8px 12px;
+      border-radius:999px;
+      font-family:'Tajawal',sans-serif;
+      font-weight:700;
+      font-size:12px;
+      cursor:pointer;
+      backdrop-filter:blur(14px);
+    }
+    .server-btn.active{background:#fff;color:#000}
+
+    .center-transport{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      display:flex;
+      align-items:center;
+      gap:22px;
+      pointer-events:auto;
+      opacity:0;
+      transition:opacity .2s;
+    }
+    .center-transport.visible{opacity:1}
+    .circle-btn.big,.circle-btn.seek-btn{
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter:blur(14px);
+      color:#fff;
+      box-shadow:0 16px 38px rgba(0,0,0,.35);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+    .circle-btn.big{width:74px;height:74px}
+    .circle-btn.seek-btn{width:60px;height:60px}
+    .circle-btn.big i{width:32px;height:32px}
+    .circle-btn.seek-btn i{width:22px;height:22px}
+    .seek-badge{position:relative;width:60px;height:60px}
+    .seek-badge .num{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+      pointer-events:none;
+      transform:translateY(1px);
+    }
+    .seek-badge i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+
+    .bottom-bar{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      pointer-events:auto;
+      padding:12px 14px 14px;
+      background:linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.18), rgba(0,0,0,0));
+      opacity:0;
+      transform:translateY(6px);
+      transition:opacity .22s, transform .22s;
+    }
+    .bottom-bar.visible{opacity:1;transform:translateY(0)}
+    .progress-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .progress-wrapper{flex:1;height:5px;border-radius:999px;background:rgba(255,255,255,.22);overflow:hidden;cursor:pointer;position:relative}
+    .progress-played{position:absolute;left:0;top:0;bottom:0;width:0%;background:#fff}
+    .progress-thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#fff;left:0%;box-shadow:0 0 10px rgba(255,255,255,.35)}
+    .controls-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .icons-row{display:flex;align-items:center;gap:12px;justify-content:flex-end;direction:ltr;min-width:0;width:100%;flex-wrap:nowrap}
+    .time-text{color:#fff;font-size:15px;font-weight:500;min-width:120px;text-align:left;direction:ltr;opacity:.92;margin-left:auto}
+    .icon-btn{
+      width:40px;
+      height:40px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:12px;
+      padding:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      color:#fff;
+      backdrop-filter:blur(10px);
+    }
+    .icon-btn i{width:20px;height:20px;color:#fff}
+    .live-task{
+      display:none;
+      align-items:center;
+      gap:6px;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter:blur(14px);
+      color:#fff;
+      font-weight:800;
+      font-size:13px;
+      min-width:110px;
+      justify-content:center;
+    }
+    .live-task .dot{
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#ff2b2b;
+      box-shadow:0 0 10px rgba(255,0,0,.9);
+      animation:pulse 1.2s infinite;
+    }
+    @keyframes pulse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.55}100%{transform:scale(1);opacity:1}}
+    .quality-menu{
+      position:absolute;
+      bottom:64px;
+      left:12px;
+      z-index:80;
+      min-width:190px;
+      background:rgba(0,0,0,.82);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      padding:6px;
+      display:none;
+      pointer-events:auto;
+      backdrop-filter:blur(6px);
+      box-shadow:0 12px 32px rgba(0,0,0,.35);
+    }
+    .quality-menu.visible{display:block}
+    .quality-item{
+      width:100%;
+      border:none;
+      background:transparent;
+      color:rgba(255,255,255,.92);
+      padding:10px;
+      text-align:right;
+      font-family:'Tajawal',sans-serif;
+      font-size:13px;
+      border-radius:12px;
+      cursor:pointer;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .quality-item:hover,.quality-item.active{background:rgba(255,255,255,.12)}
+    .quality-badge{font-size:11px;color:rgba(255,255,255,.6)}
+    #liveLabel{
+      position:absolute;
+      bottom:110px;
+      left:50%;
+      transform:translateX(-50%);
+      color:#fff;
+      font-size:14px;
+      background:rgba(0,0,0,.55);
+      padding:6px 10px;
+      border-radius:999px;
+      display:none;
+      pointer-events:none;
+      z-index:90;
+      backdrop-filter:blur(10px);
+    }
+    #pipBtn,#fullscreenBtn{display:none!important}
+    #castBtn,#rotateBtn{display:flex!important}
+  </style>
+</head>
+
+<body>
+  <main class="app-page" id="appPage">
+    <div class="topbar">
+      <div>
+        <div class="top-title">جدول المباريات</div>
+        <div class="top-sub">اضغط على المباراة لتشغيل السيرفر مباشرة</div>
+      </div>
+      <button class="icon-btn-page" onclick="location.reload()">↻</button>
+    </div>
+
+    <div id="matchesList">
+      <div class="empty-message">جاري تحميل المباريات...</div>
+    </div>
+  </main>
+
+  <div class="toast-modal" id="noServerModal">
+    <div class="toast-box">
+      <div class="toast-title">تنبيه</div>
+      <div class="toast-text">لا يوجد سيرفر لهذه المباراة.</div>
+      <button class="toast-btn" onclick="closeNoServerModal()">حسناً</button>
+    </div>
+  </div>
+
+  <div id="player-root">
+    <div class="player-wrapper" id="playerWrapper">
+      <video id="video" playsinline autoplay></video>
+
+      <div class="top-bar" id="topBar">
+        <div class="top-top">
+          <div class="top-left">
+            <button class="top-btn" id="backBtn" title="رجوع"><i data-feather="arrow-right"></i></button>
+            <div class="server-strip" id="serverStrip"></div>
+          </div>
+          <div class="stream-title" id="streamTitle">A Live</div>
+        </div>
+      </div>
+
+      <div id="loading-spinner"></div>
+      <div id="buffer-spinner"></div>
+
+      <div id="error-overlay">
+        <i data-feather="alert-triangle"></i>
+        <h3 id="error-title">خطأ في المشغل</h3>
+        <p id="error-message">تعذر تشغيل الفيديو.</p>
+        <button class="retry-btn" id="retryBtn">إعادة التحميل</button>
+      </div>
+
+      <div class="controls-overlay" id="controlsOverlay">
+        <div class="center-transport" id="centerTransport">
+          <div class="circle-btn seek-btn seek-badge" id="rewind5Btn"><i data-feather="rotate-ccw"></i><div class="num">5</div></div>
+          <div class="circle-btn big" id="centerPlayPauseBtn"><i data-feather="pause"></i></div>
+          <div class="circle-btn seek-btn seek-badge" id="forward15Btn"><i data-feather="rotate-cw"></i><div class="num">15</div></div>
+        </div>
+
+        <div class="bottom-bar" id="bottomBar">
+          <div class="progress-row">
+            <div class="progress-wrapper" id="progressWrapper" tabindex="0">
+              <div class="progress-played" id="progressPlayed"></div>
+              <div class="progress-thumb" id="progressThumb"></div>
+            </div>
+          </div>
+
+          <div class="controls-row">
+            <div class="icons-row">
+              <button class="icon-btn" id="muteBtn"><i data-feather="volume-x"></i></button>
+              <button class="icon-btn" id="fitBtn"><i data-feather="maximize-2"></i></button>
+              <button class="icon-btn" id="qualityBtn"><i data-feather="settings"></i></button>
+              <button class="icon-btn" id="ccBtn"><i data-feather="message-square"></i></button>
+              <button class="icon-btn" id="audioLangBtn"><i data-feather="globe"></i></button>
+              <button class="icon-btn" id="castBtn"><i data-feather="cast"></i></button>
+              <button class="icon-btn" id="pipBtn"><i data-feather="airplay"></i></button>
+              <button class="icon-btn" id="fullscreenBtn"><i data-feather="maximize"></i></button>
+              <button class="icon-btn" id="rotateBtn"><i data-feather="rotate-cw"></i></button>
+            </div>
+
+            <div class="live-task" id="liveTask"><span class="dot"></span>A LIVE</div>
+            <div class="time-text" id="timeLabel">00:00 • 00:00</div>
+          </div>
+        </div>
+
+        <div class="quality-menu" id="qualityMenu"></div>
+        <div class="quality-menu" id="subsMenu"></div>
+        <div class="quality-menu" id="audioMenu"></div>
+        <div id="liveLabel"></div>
+      </div>
+    </div>
+  </div>
+
 <script>
-const firebaseConfig={apiKey:"AIzaSyAGhmOqXWxmr2ULOzNMMDuLlxCeTmUNpis",authDomain:"frsin-araq.firebaseapp.com",databaseURL:"https://frsin-araq-default-rtdb.firebaseio.com",projectId:"frsin-araq",storageBucket:"frsin-araq.firebasestorage.app",messagingSenderId:"813355696991",appId:"1:813355696991:web:4a58ec98591210bf77acea"};
-firebase.initializeApp(firebaseConfig); const db=firebase.database();
-const box=document.getElementById('matches'); const noServersModal=document.getElementById('noServersModal');
-function showNoServersModal(){noServersModal.classList.add('show')} function closeNoServersModal(){noServersModal.classList.remove('show')}
-function arTime(t){try{return new Date('2026-01-01T'+(t||'00:00')).toLocaleTimeString('ar-IQ',{hour:'numeric',minute:'2-digit',hour12:true}).replace('صباحًا','ص').replace('مساءً','م')}catch(e){return t||''}}
-function renderCard(m){const q=Array.isArray(m.qualities)?m.qualities:[]; const notStarted=(m.statusText==='لم تبدأ'); const center=notStarted?`<div class="time">${arTime(m.time)}</div>`:`<div class="score">${m.homeScore||0} - ${m.awayScore||0}</div>`; const payload={title:(m.home||'')+' VS '+(m.away||''),subtitle:(m.championship||'')+' • '+(m.time||''),defaultIndex:0,qualities:q}; const playerLink='player.html?data='+encodeURIComponent(JSON.stringify(payload)); const onClick=q.length?`location.href='${playerLink.replace(/'/g,"%27")}'`:`showNoServersModal()`; return `<div class="card" onclick="${onClick}"><div class="match-head"><div class="team"><img src="${m.homeLogo||''}"><div class="team-name">${m.home||''}</div></div><div class="center">${center}<div class="badge" style="background:${m.statusBg||'#10b981'}">${m.statusText||'لم تبدأ'}</div></div><div class="team"><img src="${m.awayLogo||''}"><div class="team-name">${m.away||''}</div></div></div>${m.championship?`<div class="league">${m.championship}</div>`:''}</div>`}
-db.ref('matches').on('value',snap=>{const data=snap.val()||{}; const list=Object.values(data).filter(m=>m&&m.published); if(!list.length){box.innerHTML='<div class="empty">لا توجد مباريات ظاهرة حالياً<br>عند إرسال مباراة من لوحة المسؤول ستظهر هنا مباشرة.</div>'; return;} list.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0)); box.innerHTML=list.map(renderCard).join('');});
+const firebaseConfig = {
+  apiKey: "AIzaSyAGhmOqXWxmr2ULOzNMMDuLlxCeTmUNpis",
+  authDomain: "frsin-araq.firebaseapp.com",
+  databaseURL: "https://frsin-araq-default-rtdb.firebaseio.com",
+  projectId: "frsin-araq",
+  storageBucket: "frsin-araq.firebasestorage.app",
+  messagingSenderId: "813355696991",
+  appId: "1:813355696991:web:4a58ec98591210bf77acea"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const WORKER_BASE = "https://ali.albesriali8.workers.dev/";
+
+const matchesList = document.getElementById("matchesList");
+const noServerModal = document.getElementById("noServerModal");
+
+function closeNoServerModal(){
+  noServerModal.classList.remove("show");
+}
+
+function showNoServerModal(){
+  noServerModal.classList.add("show");
+}
+
+function safeText(v, fallback = ""){
+  return (v === undefined || v === null) ? fallback : String(v);
+}
+
+function pick(obj, keys, fallback = ""){
+  for (const k of keys) {
+    if (obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== "") return obj[k];
+  }
+  return fallback;
+}
+
+function getLogo(value){
+  if (!value) return "https://via.placeholder.com/64?text=Team";
+  const img = String(value);
+  if (img.startsWith("http")) return img;
+  return "https://images.weserv.nl/?url=" + encodeURIComponent("https://imgs.ysscores.com/teams/64/" + img);
+}
+
+function englishTime(timeValue){
+  if (!timeValue) return "";
+  let raw = String(timeValue).trim();
+
+  if (/^\d{1,2}:\d{2}/.test(raw)) {
+    const parts = raw.split(":");
+    let h = parseInt(parts[0], 10);
+    const m = parts[1].slice(0,2);
+    const ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12;
+    if (h === 0) h = 12;
+    return `${h}:${m} ${ampm}`;
+  }
+
+  const d = new Date(raw);
+  if (!isNaN(d.getTime())) {
+    return d.toLocaleTimeString("en-US", {hour:"numeric", minute:"2-digit", hour12:true});
+  }
+
+  return raw;
+}
+
+function statusInfo(match){
+  const status = Number(pick(match, ["status", "match_status"], 0));
+  const statusText = safeText(pick(match, ["statusText", "status_text"], ""));
+
+  if (statusText.includes("انتهت") || status === 4) {
+    return {text:"انتهت", bg:"#6b7280", order:3};
+  }
+
+  if (statusText.includes("جارية") || [1,2,3].includes(status)) {
+    return {text:"جاري الآن", bg:"#ef4444", order:1};
+  }
+
+  const date = pick(match, ["match_date", "date"], "");
+  const time = pick(match, ["match_time", "time"], "");
+  const t = Date.parse(`${date} ${time}`);
+  if (t && Date.now() >= t && status !== 0) {
+    return {text:"جاري الآن", bg:"#ef4444", order:1};
+  }
+
+  return {text:"لم تبدأ", bg:"#10b981", order:2};
+}
+
+function normalizeServers(match){
+  const servers = pick(match, ["servers", "qualities", "links"], []);
+  if (!Array.isArray(servers)) return [];
+
+  return servers
+    .filter(s => s && (s.url || s.link))
+    .map((s, i) => ({
+      label: safeText(pick(s, ["label", "name", "quality"], "سيرفر " + (i + 1))),
+      url: safeText(pick(s, ["url", "link"], "")),
+      userAgent: safeText(pick(s, ["userAgent", "ua", "user_agent"], "")),
+      referer: safeText(pick(s, ["referer", "ref"], "")),
+      origin: safeText(pick(s, ["origin"], "")),
+      drmKey: safeText(pick(s, ["drmKey", "drm", "clearkey"], ""))
+    }));
+}
+
+function normalizeMatch(raw, key){
+  const homeObj = raw.home_team || raw.home || {};
+  const awayObj = raw.away_team || raw.away || {};
+
+  const homeName = pick(raw, ["home_name", "homeTeam", "homeTitle"], "") || pick(homeObj, ["title", "name"], "الفريق الأول");
+  const awayName = pick(raw, ["away_name", "awayTeam", "awayTitle"], "") || pick(awayObj, ["title", "name"], "الفريق الثاني");
+
+  return {
+    key,
+    raw,
+    homeName,
+    awayName,
+    homeLogo: pick(raw, ["home_logo", "homeLogo"], "") || pick(homeObj, ["image", "logo"], ""),
+    awayLogo: pick(raw, ["away_logo", "awayLogo"], "") || pick(awayObj, ["image", "logo"], ""),
+    time: pick(raw, ["match_time", "time"], ""),
+    date: pick(raw, ["match_date", "date"], ""),
+    homeScore: pick(raw, ["home_scores", "homeScore"], "0"),
+    awayScore: pick(raw, ["away_scores", "awayScore"], "0"),
+    championship: pick(raw, ["championship_name", "league", "championship"], ""),
+    servers: normalizeServers(raw),
+    status: statusInfo(raw)
+  };
+}
+
+function renderMatches(snapshot){
+  const data = snapshot.val() || {};
+  let rows = [];
+
+  if (Array.isArray(data)) {
+    rows = data.map((m, i) => normalizeMatch(m, String(i)));
+  } else {
+    rows = Object.entries(data).map(([key, value]) => normalizeMatch(value, key));
+  }
+
+  rows = rows.filter(m => {
+    const r = m.raw || {};
+    return r.published === true || r.isPublished === true || r.visible === true || r.publish === true || r.sent === true;
+  });
+
+  rows.sort((a,b) => a.status.order - b.status.order);
+
+  if (!rows.length) {
+    matchesList.innerHTML = `<div class="empty-message">لا توجد مباريات ظاهرة حالياً<br>أرسل مباراة من لوحة المسؤول حتى تظهر هنا</div>`;
+    return;
+  }
+
+  matchesList.innerHTML = "";
+  rows.forEach(match => {
+    const card = document.createElement("div");
+    card.className = "match-card";
+
+    const isNotStarted = match.status.text === "لم تبدأ";
+    const centerHtml = isNotStarted
+      ? `<div class="time">${englishTime(match.time)}</div>`
+      : `<div class="score">${safeText(match.homeScore,"0")} - ${safeText(match.awayScore,"0")}</div>`;
+
+    card.innerHTML = `
+      <div class="match-head">
+        <div class="team">
+          <img src="${getLogo(match.homeLogo)}" onerror="this.src='https://via.placeholder.com/64?text=Team'">
+          <div class="team-name">${match.homeName}</div>
+        </div>
+
+        <div class="center">
+          ${centerHtml}
+          <div class="badge" style="background:${match.status.bg}">${match.status.text}</div>
+        </div>
+
+        <div class="team">
+          <img src="${getLogo(match.awayLogo)}" onerror="this.src='https://via.placeholder.com/64?text=Team'">
+          <div class="team-name">${match.awayName}</div>
+        </div>
+      </div>
+    `;
+
+    card.onclick = () => {
+      if (!match.servers || !match.servers.length) {
+        showNoServerModal();
+        return;
+      }
+
+      openPlayer({
+        title: `${match.homeName} VS ${match.awayName}`,
+        subtitle: `${match.championship || ""} • ${englishTime(match.time)}`,
+        defaultIndex: 0,
+        qualities: match.servers
+      });
+    };
+
+    matchesList.appendChild(card);
+  });
+}
+
+/*
+  مهم:
+  خلي الأدمن يحفظ المباريات داخل المسار:
+  matches
+
+  وكل مباراة لازم بيها:
+  published: true
+  servers: [...]
+*/
+db.ref("matches").on("value", renderMatches, () => {
+  matchesList.innerHTML = `<div class="empty-message">تعذر الاتصال بقاعدة البيانات</div>`;
+});
 </script>
-</body></html>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  feather.replace();
+});
+
+const video = document.getElementById('video');
+const playerRoot = document.getElementById('player-root');
+const playerWrapper = document.getElementById('playerWrapper');
+const loadingSpinner = document.getElementById('loading-spinner');
+const bufferSpinner = document.getElementById('buffer-spinner');
+const errorOverlay = document.getElementById('error-overlay');
+const errorTitle = document.getElementById('error-title');
+const errorMessage = document.getElementById('error-message');
+const retryBtn = document.getElementById('retryBtn');
+const bottomBar = document.getElementById('bottomBar');
+const centerTransport = document.getElementById('centerTransport');
+const topBar = document.getElementById("topBar");
+const backBtn = document.getElementById("backBtn");
+const streamTitleEl = document.getElementById("streamTitle");
+const serverStrip = document.getElementById("serverStrip");
+const rewind5Btn = document.getElementById('rewind5Btn');
+const forward15Btn = document.getElementById('forward15Btn');
+const centerPlayPauseBtn = document.getElementById('centerPlayPauseBtn');
+const progressWrapper = document.getElementById('progressWrapper');
+const progressPlayed = document.getElementById('progressPlayed');
+const progressThumb = document.getElementById('progressThumb');
+const timeLabel = document.getElementById('timeLabel');
+const liveTask = document.getElementById("liveTask");
+const muteBtn = document.getElementById('muteBtn');
+const fitBtn = document.getElementById('fitBtn');
+const qualityBtn = document.getElementById('qualityBtn');
+const qualityMenu = document.getElementById('qualityMenu');
+const castBtn = document.getElementById('castBtn');
+const pipBtn = document.getElementById('pipBtn');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const rotateBtn = document.getElementById('rotateBtn');
+const ccBtn = document.getElementById('ccBtn');
+const audioLangBtn = document.getElementById('audioLangBtn');
+const subsMenu = document.getElementById('subsMenu');
+const audioMenu = document.getElementById('audioMenu');
+const liveLabel = document.getElementById('liveLabel');
+
+let shakaPlayer = null;
+let hls = null;
+let sourceList = [];
+let currentIndex = 0;
+let sourceType = '';
+let availableHeights = [];
+let manualHeight = null;
+let hideTimeout = null;
+let rotated = false;
+let chosenTextLang = null;
+let chosenAudioLang = null;
+let currentPayload = null;
+
+const FIT_KEY = 'a_fit_mode';
+const FIT_MODES = [
+  { key:'contain', label:'ملاءمة', cls:'fit-contain', icon:'minimize-2' },
+  { key:'cover',   label:'قص',     cls:'fit-cover',   icon:'crop' },
+  { key:'fill',    label:'تمدد',   cls:'fit-fill',    icon:'maximize-2' }
+];
+let fitModeIndex = 2;
+
+function buildProxyUrl(src){
+  const params = new URLSearchParams();
+  params.set('url', src.url || '');
+  if (src.userAgent) params.set('ua', src.userAgent);
+  if (src.referer) params.set('ref', src.referer);
+  if (src.origin) params.set('origin', src.origin);
+  return WORKER_BASE + '?' + params.toString();
+}
+
+function showError(title,msg){
+  loadingSpinner.style.display='none';
+  bufferSpinner.style.display='none';
+  errorTitle.textContent = title;
+  errorMessage.textContent = msg;
+  errorOverlay.style.display='flex';
+  feather.replace();
+}
+
+function hideError(){ errorOverlay.style.display='none'; }
+
+function fmt(sec){
+  if (!isFinite(sec) || sec < 0) return "00:00";
+  const s = Math.floor(sec % 60).toString().padStart(2,'0');
+  const m = Math.floor((sec / 60) % 60).toString().padStart(2,'0');
+  const h = Math.floor(sec / 3600);
+  return h > 0 ? h.toString().padStart(2,'0') + ":" + m + ":" + s : m + ":" + s;
+}
+
+function flashLabel(text){
+  liveLabel.textContent = text;
+  liveLabel.style.display = 'block';
+  setTimeout(()=> liveLabel.style.display='none', 1200);
+}
+
+function showControls(){
+  bottomBar.classList.add('visible');
+  centerTransport.classList.add('visible');
+  topBar.classList.add('visible');
+  clearTimeout(hideTimeout);
+  hideTimeout = setTimeout(()=>{
+    bottomBar.classList.remove('visible');
+    centerTransport.classList.remove('visible');
+    topBar.classList.remove('visible');
+    qualityMenu.classList.remove('visible');
+    subsMenu.classList.remove('visible');
+    audioMenu.classList.remove('visible');
+  }, 2800);
+}
+
+function setCenterPlayIcon(){
+  const icon = video.paused ? 'play' : 'pause';
+  centerPlayPauseBtn.innerHTML = `<i data-feather="${icon}"></i>`;
+  feather.replace();
+}
+
+function updateMuteIcon(){
+  const icon = video.muted ? 'volume-x' : 'volume-2';
+  muteBtn.innerHTML = `<i data-feather="${icon}"></i>`;
+  feather.replace();
+}
+
+function updateProgress(){
+  const cur = video.currentTime || 0;
+  const dur = video.duration || 0;
+  if (dur > 0 && isFinite(dur)){
+    const ratio = (cur / dur) * 100;
+    progressPlayed.style.width = ratio + "%";
+    progressThumb.style.left = ratio + "%";
+    timeLabel.textContent = `${fmt(cur)} • ${fmt(dur)}`;
+  } else {
+    progressPlayed.style.width = "100%";
+    progressThumb.style.left = "100%";
+    timeLabel.textContent = "LIVE";
+  }
+}
+
+function destroyEngines(){
+  try { if(hls){ hls.destroy(); hls = null; } } catch(e){}
+  try { if(shakaPlayer){ shakaPlayer.destroy(); shakaPlayer = null; } } catch(e){}
+  video.pause();
+  video.removeAttribute('src');
+  try { video.load(); } catch(e){}
+  availableHeights = [];
+  manualHeight = null;
+}
+
+function closePlayer(){
+  destroyEngines();
+  playerRoot.classList.remove("show");
+  document.body.classList.remove("player-open");
+  hideError();
+}
+
+function openPlayer(payload){
+  currentPayload = payload;
+  if (!payload || !Array.isArray(payload.qualities) || !payload.qualities.length) {
+    showNoServerModal();
+    return;
+  }
+
+  sourceList = payload.qualities.filter(q => q && q.url && String(q.url).trim() !== '');
+  if (!sourceList.length) {
+    showNoServerModal();
+    return;
+  }
+
+  currentIndex = Number(payload.defaultIndex || 0);
+  if (currentIndex >= sourceList.length) currentIndex = 0;
+
+  playerRoot.classList.add("show");
+  document.body.classList.add("player-open");
+  streamTitleEl.textContent = payload.title || 'A Live';
+
+  buildServerStrip();
+  buildQualityMenu();
+  loadFitMode();
+  showControls();
+  playSelectedSource(currentIndex);
+}
+
+function detectType(url){
+  const u = (url || '').toLowerCase();
+  if (u.includes('#hls') || u.includes('&type=hls') || u.includes('?type=hls')) return 'hls';
+  if (u.includes('.mpd')) return 'dash';
+  if (u.includes('.m3u8')) return 'hls';
+  if (u.includes('.ts')) return 'ts';
+  if (u.includes('.mp4') || u.includes('.mkv') || u.includes('.webm') || u.includes('.mov')) return 'file';
+  return 'auto';
+}
+
+function applyFitModeByIndex(idx){
+  fitModeIndex = (idx + FIT_MODES.length) % FIT_MODES.length;
+  const m = FIT_MODES[fitModeIndex];
+  video.classList.remove('fit-contain','fit-cover','fit-fill');
+  video.classList.add(m.cls);
+  fitBtn.innerHTML = `<i data-feather="${m.icon}"></i>`;
+  feather.replace();
+  try { localStorage.setItem(FIT_KEY, m.key); } catch(e){}
+}
+
+function loadFitMode(){
+  let saved = null;
+  try { saved = localStorage.getItem(FIT_KEY); } catch(e){}
+  const idx = FIT_MODES.findIndex(x => x.key === saved);
+  if (idx >= 0) fitModeIndex = idx;
+  applyFitModeByIndex(fitModeIndex);
+}
+
+function cycleFitMode(){
+  applyFitModeByIndex(fitModeIndex + 1);
+  flashLabel(`العرض: ${FIT_MODES[fitModeIndex].label}`);
+}
+
+function parseClearKey(ckString){
+  if (!ckString) return null;
+  const parts = ckString.split(':');
+  if (parts.length !== 2) return null;
+  const kid = parts[0].trim().toLowerCase().replace(/-/g,'');
+  const key = parts[1].trim().toLowerCase().replace(/-/g,'');
+  const hexRe = /^[0-9a-f]+$/;
+  if (!hexRe.test(kid) || !hexRe.test(key)) return null;
+  return { kid, key };
+}
+
+function buildServerStrip(){
+  serverStrip.innerHTML = '';
+  sourceList.forEach((item, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'server-btn' + (i === currentIndex ? ' active' : '');
+    btn.textContent = item.label || ('Server ' + (i + 1));
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      playSelectedSource(i);
+    };
+    serverStrip.appendChild(btn);
+  });
+}
+
+async function togglePlay(){
+  if (video.paused) await video.play().catch(()=>{});
+  else video.pause();
+  setCenterPlayIcon();
+}
+
+function seekBy(d){
+  const dur = video.duration || 0;
+  if (!dur || !isFinite(dur)) return;
+  video.currentTime = Math.max(0, (video.currentTime || 0) + d);
+}
+
+function buildQualityMenu(){
+  const baseItems = sourceList.map((src, idx) => ({
+    label: src.label || ('Server ' + (idx + 1)),
+    action: 'source',
+    index: idx,
+    active: idx === currentIndex
+  }));
+
+  const qualityItems = sourceType === 'dash'
+    ? [
+        { label:'تلقائي (Auto)', action:'quality', height:null, active: manualHeight === null },
+        ...availableHeights.map(h => ({
+          label:`${h}p`,
+          action:'quality',
+          height:h,
+          active: manualHeight === h
+        }))
+      ]
+    : [];
+
+  const items = [...baseItems, ...qualityItems];
+
+  qualityMenu.innerHTML = items.map(it => {
+    if (it.action === 'source') {
+      return `<button class="quality-item ${it.active ? 'active' : ''}" data-action="source" data-index="${it.index}">
+        <span>${it.label}</span><span class="quality-badge">سيرفر</span></button>`;
+    }
+    return `<button class="quality-item ${it.active ? 'active' : ''}" data-action="quality" data-height="${it.height === null ? '' : it.height}">
+      <span>${it.label}</span><span class="quality-badge">جودة</span></button>`;
+  }).join('');
+
+  qualityMenu.querySelectorAll('.quality-item').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const action = btn.getAttribute('data-action');
+      if (action === 'source') {
+        const i = parseInt(btn.getAttribute('data-index'), 10);
+        await playSelectedSource(i);
+      } else {
+        const hAttr = btn.getAttribute('data-height');
+        const h = hAttr === '' ? null : parseInt(hAttr, 10);
+        await setQuality(h);
+      }
+      qualityMenu.classList.remove('visible');
+      showControls();
+    });
+  });
+}
+
+async function refreshAvailableQualities(){
+  availableHeights = [];
+  if (sourceType === 'dash' && shakaPlayer) {
+    const variants = shakaPlayer.getVariantTracks().filter(t => t.type === 'variant' && t.height).sort((a,b)=> b.height - a.height);
+    const heights = [];
+    for (const v of variants) if (!heights.includes(v.height)) heights.push(v.height);
+    availableHeights = heights;
+  }
+  buildQualityMenu();
+}
+
+async function setQuality(heightOrNull){
+  if (sourceType === 'dash' && shakaPlayer) {
+    if (heightOrNull === null) {
+      manualHeight = null;
+      shakaPlayer.configure({ abr: { enabled:true } });
+      buildQualityMenu();
+      flashLabel('الجودة: تلقائي');
+      return;
+    }
+    manualHeight = heightOrNull;
+    shakaPlayer.configure({ abr: { enabled:false } });
+    const tracks = shakaPlayer.getVariantTracks().filter(t => t.height === heightOrNull).sort((a,b)=> (b.bandwidth||0) - (a.bandwidth||0));
+    if (tracks.length) {
+      shakaPlayer.selectVariantTrack(tracks[0], true);
+      flashLabel(`الجودة: ${heightOrNull}p`);
+    }
+    buildQualityMenu();
+    return;
+  }
+  flashLabel('الجودة حسب السيرفر');
+}
+
+async function buildSubsMenu(){
+  if (!shakaPlayer) {
+    subsMenu.innerHTML = '<button class="quality-item active"><span>غير مدعوم لهذا النوع</span></button>';
+    return;
+  }
+
+  const tracks = shakaPlayer.getTextTracks?.() || [];
+  const visible = shakaPlayer.isTextTrackVisible?.() || false;
+  const items = [
+    { label:'إيقاف الترجمة', lang:null, active:!visible },
+    ...tracks.map(t => ({ label:`ترجمة: ${(t.language||'und').toUpperCase()}`, lang:t.language||'', active: visible && (chosenTextLang||'') === (t.language||'') }))
+  ];
+
+  subsMenu.innerHTML = items.map(it=>`<button class="quality-item ${it.active?'active':''}" data-lang="${it.lang ?? ''}"><span>${it.label}</span></button>`).join('');
+
+  subsMenu.querySelectorAll('.quality-item').forEach(btn=>btn.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    const lang = btn.getAttribute('data-lang');
+    if (!lang) {
+      shakaPlayer.setTextTrackVisibility(false);
+      chosenTextLang = null;
+      flashLabel('الترجمة: إيقاف');
+    } else {
+      const tracks2 = shakaPlayer.getTextTracks?.() || [];
+      const wanted = tracks2.find(t => (t.language||'') === lang) || tracks2[0];
+      if (wanted) {
+        shakaPlayer.selectTextTrack(wanted);
+        shakaPlayer.setTextTrackVisibility(true);
+        chosenTextLang = wanted.language;
+        flashLabel(`الترجمة: ${(wanted.language||'und').toUpperCase()}`);
+      }
+    }
+    subsMenu.classList.remove('visible');
+    showControls();
+  }));
+}
+
+async function buildAudioMenu(){
+  if (!shakaPlayer) {
+    audioMenu.innerHTML = '<button class="quality-item active"><span>غير مدعوم لهذا النوع</span></button>';
+    return;
+  }
+
+  const vars = shakaPlayer.getVariantTracks?.() || [];
+  const langs = [];
+  for (const v of vars) {
+    const L = (v.language || '').toLowerCase();
+    if (L && !langs.includes(L)) langs.push(L);
+  }
+
+  if (!langs.length) {
+    audioMenu.innerHTML = '<button class="quality-item active"><span>لا توجد لغات صوت متعددة</span></button>';
+    return;
+  }
+
+  audioMenu.innerHTML = langs.map(l=>`<button class="quality-item ${chosenAudioLang===l?'active':''}" data-alang="${l}"><span>صوت: ${l.toUpperCase()}</span></button>`).join('');
+
+  audioMenu.querySelectorAll('.quality-item').forEach(btn=>btn.addEventListener('click', async (e)=>{
+    e.stopPropagation();
+    const alang = btn.getAttribute('data-alang');
+    chosenAudioLang = alang;
+    shakaPlayer.configure({ preferredAudioLanguage: alang });
+    const vars2 = shakaPlayer.getVariantTracks?.() || [];
+    const cand = vars2.filter(v => (v.language||'').toLowerCase() === alang).sort((a,b)=> (b.bandwidth||0) - (a.bandwidth||0));
+    if (cand.length) {
+      shakaPlayer.selectVariantTrack(cand[0], true);
+      flashLabel(`الصوت: ${alang.toUpperCase()}`);
+    }
+    audioMenu.classList.remove('visible');
+    showControls();
+  }));
+}
+
+function applyLiveUI(){
+  const isLive = !isFinite(video.duration) || (sourceType !== 'file' && (video.duration === Infinity || Number.isNaN(video.duration)));
+  if (isLive) {
+    liveTask.style.display = "flex";
+    timeLabel.style.display = "none";
+    rewind5Btn.style.opacity = ".45";
+    forward15Btn.style.opacity = ".45";
+    progressWrapper.style.opacity = ".5";
+  } else {
+    liveTask.style.display = "none";
+    timeLabel.style.display = "block";
+    rewind5Btn.style.opacity = "1";
+    forward15Btn.style.opacity = "1";
+    progressWrapper.style.opacity = "1";
+  }
+}
+
+async function playSelectedSource(index){
+  const src = sourceList[index];
+  if (!src || !src.url) {
+    showError('رابط غير موجود', 'لا يوجد رابط لهذا السيرفر.');
+    return;
+  }
+
+  currentIndex = index;
+  buildServerStrip();
+  buildQualityMenu();
+  hideError();
+
+  const url = src.url;
+  sourceType = detectType(url);
+
+  loadingSpinner.style.display = 'block';
+  bufferSpinner.style.display = 'none';
+  destroyEngines();
+
+  try {
+    if (sourceType === 'dash') {
+      shaka.polyfill.installAll();
+      if (!shaka.Player.isBrowserSupported()) throw new Error('المتصفح لا يدعم DASH');
+
+      shakaPlayer = new shaka.Player(video);
+      shakaPlayer.addEventListener('error', (event)=> {
+        const msg = event.detail?.message || JSON.stringify(event.detail) || 'خطأ في DASH';
+        showError('خطأ في Shaka', msg);
+      });
+
+      const engine = shakaPlayer.getNetworkingEngine();
+      if (engine) {
+        engine.registerRequestFilter((reqType, request) => {
+          if (src.userAgent) request.headers['User-Agent'] = src.userAgent;
+          if (src.referer) request.headers['Referer'] = src.referer;
+          if (src.origin) request.headers['Origin'] = src.origin;
+        });
+      }
+
+      const ckParsed = parseClearKey(src.drmKey || '');
+      if (ckParsed) {
+        shakaPlayer.configure({ drm: { clearKeys: { [ckParsed.kid]: ckParsed.key } } });
+      }
+
+      await shakaPlayer.load(buildProxyUrl(src));
+      await refreshAvailableQualities();
+      await video.play().catch(()=>{});
+    } else if (sourceType === 'hls' || sourceType === 'auto') {
+      const proxiedUrl = buildProxyUrl(src);
+
+      if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = proxiedUrl;
+        video.load();
+        await video.play().catch(()=>{});
+      } else if (window.Hls && Hls.isSupported()) {
+        hls = new Hls({ enableWorker:true, lowLatencyMode:true });
+        hls.loadSource(proxiedUrl);
+        hls.attachMedia(video);
+
+        await new Promise((resolve, reject) => {
+          hls.on(Hls.Events.MANIFEST_PARSED, resolve);
+          hls.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) reject(new Error('فشل تشغيل HLS'));
+          });
+        });
+
+        await video.play().catch(()=>{});
+      } else {
+        video.src = proxiedUrl;
+        video.load();
+        await video.play().catch(()=>{});
+      }
+
+      availableHeights = [];
+      buildQualityMenu();
+    } else {
+      video.src = buildProxyUrl(src);
+      video.load();
+      await video.play().catch(()=>{});
+      availableHeights = [];
+      buildQualityMenu();
+    }
+
+    loadingSpinner.style.display = 'none';
+    updateMuteIcon();
+    setCenterPlayIcon();
+    applyLiveUI();
+    showControls();
+    flashLabel(`تم تشغيل ${src.label || 'السيرفر'}`);
+  } catch(err) {
+    loadingSpinner.style.display = 'none';
+    showError('فشل التحميل', err?.message || String(err));
+  }
+}
+
+function toggleRotate(){
+  rotated = !rotated;
+  if(rotated){
+    video.style.transform = 'rotate(90deg) scale(1.02)';
+    video.style.transformOrigin = 'center center';
+    flashLabel('تم تفعيل التدوير');
+  } else {
+    video.style.transform = '';
+    video.style.transformOrigin = '';
+    flashLabel('تم إيقاف التدوير');
+  }
+}
+
+playerWrapper.addEventListener('click', (e)=>{
+  showControls();
+  if (!qualityMenu.contains(e.target) && e.target !== qualityBtn) qualityMenu.classList.remove('visible');
+  if (!subsMenu.contains(e.target) && e.target !== ccBtn) subsMenu.classList.remove('visible');
+  if (!audioMenu.contains(e.target) && e.target !== audioLangBtn) audioMenu.classList.remove('visible');
+});
+
+rewind5Btn.addEventListener('click', (e)=>{ e.stopPropagation(); seekBy(-5); showControls(); });
+forward15Btn.addEventListener('click', (e)=>{ e.stopPropagation(); seekBy(15); showControls(); });
+centerPlayPauseBtn.addEventListener('click', (e)=>{ e.stopPropagation(); togglePlay(); showControls(); });
+
+progressWrapper.addEventListener('click', (e)=>{
+  const dur = video.duration || 0;
+  if (!(dur > 0 && isFinite(dur))) return;
+  const rect = progressWrapper.getBoundingClientRect();
+  const ratio = (e.clientX - rect.left) / rect.width;
+  video.currentTime = Math.max(0, Math.min(dur, ratio * dur));
+  showControls();
+});
+
+qualityBtn.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  subsMenu.classList.remove('visible');
+  audioMenu.classList.remove('visible');
+  qualityMenu.classList.toggle('visible');
+  showControls();
+});
+
+fitBtn.addEventListener('click', (e)=>{ e.stopPropagation(); cycleFitMode(); showControls(); });
+
+ccBtn.addEventListener('click', async (e)=>{
+  e.stopPropagation();
+  qualityMenu.classList.remove('visible');
+  audioMenu.classList.remove('visible');
+  await buildSubsMenu();
+  subsMenu.classList.toggle('visible');
+  showControls();
+});
+
+audioLangBtn.addEventListener('click', async (e)=>{
+  e.stopPropagation();
+  qualityMenu.classList.remove('visible');
+  subsMenu.classList.remove('visible');
+  await buildAudioMenu();
+  audioMenu.classList.toggle('visible');
+  showControls();
+});
+
+muteBtn.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  video.muted = !video.muted;
+  updateMuteIcon();
+  flashLabel(video.muted ? 'الصوت: كتم' : 'الصوت: تشغيل');
+  showControls();
+});
+
+castBtn.addEventListener('click', (e)=>{ e.stopPropagation(); flashLabel('ميزة Cast ستتوفر هنا'); showControls(); });
+pipBtn.addEventListener('click', (e)=>{ e.stopPropagation(); flashLabel('PiP غير مفعل'); showControls(); });
+fullscreenBtn.addEventListener('click', (e)=>{ e.stopPropagation(); showControls(); });
+rotateBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleRotate(); showControls(); });
+backBtn.addEventListener('click', (e)=>{ e.stopPropagation(); closePlayer(); });
+retryBtn.addEventListener('click', async ()=>{ hideError(); await playSelectedSource(currentIndex); });
+
+video.addEventListener('timeupdate', updateProgress);
+video.addEventListener('loadedmetadata', ()=>{ updateProgress(); applyLiveUI(); });
+video.addEventListener('play', ()=>{ setCenterPlayIcon(); showControls(); });
+video.addEventListener('pause', ()=>{ setCenterPlayIcon(); showControls(); });
+video.addEventListener('waiting', ()=>{ bufferSpinner.style.display='block'; });
+video.addEventListener('playing', ()=>{ bufferSpinner.style.display='none'; });
+video.addEventListener('error', ()=> showError('خطأ في الفيديو', 'تعذر تشغيل الفيديو.'));
+
+updateMuteIcon();
+setCenterPlayIcon();
+updateProgress();
+</script>
+</body>
+</html>
