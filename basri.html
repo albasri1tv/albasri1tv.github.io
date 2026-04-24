@@ -91,7 +91,6 @@ watch soccer live hd
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ar_AR">
 <meta name="theme-color" content="#0b1220">
-
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.13/shaka-player.compiled.js"></script>
@@ -241,10 +240,11 @@ header h3{
   line-height:1.4;
 }
 .result-now{
-  font-size:21px;
+  font-size:22px;
   font-weight:900;
   direction:ltr;
   color:var(--text);
+  line-height:1.2;
 }
 .match-hour{
   color:var(--accent);
@@ -596,10 +596,7 @@ video.fit-fill{object-fit:fill!important}
     <div class="player-top">
       <button class="pbtn" id="playerBackBtn" title="رجوع"><i data-feather="arrow-right"></i></button>
       <div class="player-title" id="playerTitle">BSR LIVE</div>
-      <div class="player-top-actions">
-        <button class="pbtn" id="playerThemeBtn" title="ليلي/نهاري"><i data-feather="moon"></i></button>
-        <button class="pbtn" id="fitBtn" title="حجم الشاشة"><i data-feather="maximize-2"></i></button>
-      </div>
+<div class="player-top-actions"></div>
     </div>
 
     <div class="server-strip" id="serverStrip"></div>
@@ -730,10 +727,25 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 
   function normalizeServers(m){
-    const s = m.servers || m.qualities || [];
-    if(Array.isArray(s)) return s.filter(function(x){ return x && x.url; });
-    if(typeof s === "object") return Object.values(s).filter(function(x){ return x && x.url; });
-    return [];
+    let s = [];
+
+    if(Array.isArray(m.servers)) s = m.servers;
+    else if(Array.isArray(m.qualities)) s = m.qualities;
+    else if(m.servers && typeof m.servers === "object") s = Object.values(m.servers);
+    else if(m.qualities && typeof m.qualities === "object") s = Object.values(m.qualities);
+
+    return s
+      .filter(function(x){ return x && x.url; })
+      .map(function(x){
+        return {
+          label: x.label || x.name || "Server",
+          url: x.url || "",
+          userAgent: x.userAgent || x.ua || "",
+          referer: x.referer || x.ref || "",
+          origin: x.origin || "",
+          drmKey: x.drmKey || x.clearKey || ""
+        };
+      });
   }
 
   function toEnglishDigits(str){
@@ -817,7 +829,8 @@ document.addEventListener("DOMContentLoaded", function(){
           '<div class="team-name">' + home + '</div>' +
         '</div>' +
         '<div class="match-time">' +
-          (status.showScore ? '<div class="result-now">' + getScore(m) + '</div>' : '<div class="match-hour">' + timeText + '</div>') +
+          '<div class="result-now">' + getScore(m) + '</div>' +
+          (!status.showScore ? '<div class="match-hour">' + timeText + '</div>' : '') +
           '<div class="match-date ' + status.cls + '">' + status.text + '</div>' +
         '</div>' +
         '<div class="left-team">' +
@@ -829,7 +842,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     card.onclick = function(){
       if(!servers.length){
-        toastMsg("لا يوجد سيرفر لهذه المباراة");
+        toastMsg("لا توجد سيرفرات مضافة لهذه المباراة حتى الآن");
         return;
       }
 
@@ -849,9 +862,7 @@ document.addEventListener("DOMContentLoaded", function(){
         m.published === true ||
         m.published === "true" ||
         m.isPublished === true ||
-        m.home ||
-        m.home_name ||
-        m.homeName
+        m.isPublished === "true"
       );
     });
 
@@ -876,7 +887,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function setThemeIcon(){
     const icon = document.body.classList.contains("light") ? "sun" : "moon";
     document.getElementById("themePageBtn").innerHTML = '<i data-feather="' + icon + '"></i>';
-    document.getElementById("playerThemeBtn").innerHTML = '<i data-feather="' + icon + '"></i>';
+
     feather.replace();
   }
 
@@ -890,7 +901,7 @@ document.addEventListener("DOMContentLoaded", function(){
   setThemeIcon();
 
   document.getElementById("themePageBtn").onclick = toggleTheme;
-  document.getElementById("playerThemeBtn").onclick = toggleTheme;
+
   document.getElementById("backHomeBtn").onclick = function(){ history.back(); };
 
   function showPlayerControls(){
@@ -934,8 +945,8 @@ document.addEventListener("DOMContentLoaded", function(){
     playServer(0);
   }
 
-  function closePlayer(){
-    destroyPlayer();
+  async function closePlayer(){
+    await destroyPlayer();
     clearTimeout(controlsTimer);
     playerRoot.classList.remove("player-controls-hidden");
     playerRoot.classList.remove("show");
@@ -1017,14 +1028,8 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 
   function shouldUseWorker(src){
-    const url = String(src.url || "").toLowerCase();
-
-    if(src._forceWorker) return true;
-    if(src.userAgent || src.referer || src.origin) return true;
-    if(url.includes("#hls")) return true;
-    if(url.includes(".mpd") && src.drmKey) return true;
-
-    return false;
+    // تشغيل كل الروابط عبر Worker حتى لا تتوقف الروابط التي تحتاج Headers أو Range
+    return true;
   }
 
   function getPlayUrl(src){
@@ -1032,18 +1037,19 @@ document.addEventListener("DOMContentLoaded", function(){
     return src.url;
   }
 
-  function destroyPlayer(){
+  async function destroyPlayer(){
     try{
       if(shakaPlayer){
-        shakaPlayer.destroy();
+        const oldPlayer = shakaPlayer;
         shakaPlayer = null;
+        await oldPlayer.destroy();
       }
     }catch(e){}
 
-    video.pause();
-    video.removeAttribute("src");
-
     try{
+      video.pause();
+      video.removeAttribute("src");
+      video.src = "";
       video.load();
     }catch(e){}
   }
@@ -1273,7 +1279,7 @@ document.addEventListener("DOMContentLoaded", function(){
     buildServerButtons();
 
     suppressVideoError = true;
-    destroyPlayer();
+    await destroyPlayer();
 
     setTimeout(function(){
       suppressVideoError = false;
@@ -1300,18 +1306,18 @@ document.addEventListener("DOMContentLoaded", function(){
           bufferBehind:30,
           retryParameters:{
             timeout:30000,
-            maxAttempts:8,
-            baseDelay:1000,
-            backoffFactor:2,
+            maxAttempts:10,
+            baseDelay:500,
+            backoffFactor:1.5,
             fuzzFactor:0.5
           }
         },
         manifest:{
           retryParameters:{
             timeout:30000,
-            maxAttempts:8,
-            baseDelay:1000,
-            backoffFactor:2,
+            maxAttempts:10,
+            baseDelay:500,
+            backoffFactor:1.5,
             fuzzFactor:0.5
           }
         }
@@ -1502,18 +1508,21 @@ document.addEventListener("DOMContentLoaded", function(){
     feather.replace();
   };
 
-  document.getElementById("fitBtn").onclick = function(){
+  function toggleFitMode(){
     showPlayerControls();
 
     fitIndex = (fitIndex + 1) % fitModes.length;
     video.classList.remove("fit-contain", "fit-cover", "fit-fill");
     video.classList.add(fitModes[fitIndex].cls);
 
-    document.getElementById("fitBtn").innerHTML = '<i data-feather="' + fitModes[fitIndex].icon + '"></i>';
+    const bottomFit = document.getElementById("fitBtnBottom");
+    if(bottomFit){
+      bottomFit.innerHTML = '<i data-feather="' + fitModes[fitIndex].icon + '"></i>';
+    }
     feather.replace();
 
     toastMsg("العرض: " + fitModes[fitIndex].label);
-  };
+  }
 
   document.getElementById("rotateBtn").onclick = function(){
     showPlayerControls();
@@ -1551,7 +1560,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
   document.getElementById("fitBtnBottom").onclick = function(e){
     e.stopPropagation();
-    document.getElementById("fitBtn").click();
+    toggleFitMode();
   };
 
   document.getElementById("retryBtn").onclick = function(){
