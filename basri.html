@@ -90,12 +90,10 @@ watch soccer live hd
 <meta property="og:description" content="تابع مباريات اليوم والقنوات الرياضية بث مباشر بدون تقطيع عبر BSR Live.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ar_AR">
-
+  
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.13/shaka-player.compiled.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
@@ -123,8 +121,20 @@ body.light{
   --line:rgba(15,23,42,.12);
   --accent:#0284c7;
 }
-*{box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;width:100%;min-height:100%;font-family:'Tajawal',Arial,sans-serif;background:var(--bg);color:var(--text)}
+*{
+  box-sizing:border-box;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  font-family:'Tajawal',Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 body{
   background:
     radial-gradient(circle at top right, rgba(56,189,248,.14), transparent 28%),
@@ -147,7 +157,12 @@ header{
   box-shadow:none;
   border-bottom:none;
 }
-header h3{margin:0;font-size:18px;font-weight:800;letter-spacing:.5px}
+header h3{
+  margin:0;
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
 .header-btn{
   position:absolute;
   top:11px;
@@ -167,32 +182,6 @@ header h3{margin:0;font-size:18px;font-weight:800;letter-spacing:.5px}
 #backHomeBtn{right:12px}
 #themePageBtn{left:12px}
 
-.sidenav{
-  height:100%;
-  width:0;
-  position:fixed;
-  z-index:99;
-  top:0;
-  right:0;
-  background:#0f172a;
-  overflow-x:hidden;
-  transition:.35s;
-  padding-top:65px;
-  box-shadow:-10px 0 35px rgba(0,0,0,.35);
-}
-body.light .sidenav{background:#ffffff}
-.sidenav a{
-  padding:12px 18px;
-  text-decoration:none;
-  font-size:15px;
-  color:var(--text);
-  display:block;
-  text-align:center;
-  font-weight:700;
-}
-.sidenav a:hover{background:rgba(56,189,248,.12)}
-.closebtn{position:absolute;top:12px;left:12px;font-size:24px!important}
-
 #page{
   margin-top:72px;
   padding:10px 12px 24px;
@@ -210,7 +199,7 @@ body.light .sidenav{background:#ffffff}
   margin-top:25px;
 }
 
-/* Match card style قريب من ياسين تي في لكن ألوانك */
+/* Match Card */
 .match-event{
   position:relative;
   overflow:hidden;
@@ -222,14 +211,20 @@ body.light .sidenav{background:#ffffff}
   cursor:pointer;
   transition:.18s;
 }
-.match-event:hover{transform:translateY(-2px);border-color:rgba(56,189,248,.45)}
+.match-event:hover{
+  transform:translateY(-2px);
+  border-color:rgba(56,189,248,.45);
+}
 .match-main{
   display:flex;
   align-items:center;
   min-height:112px;
   text-align:center;
 }
-.first-team,.left-team,.match-time{width:33.333%;padding:8px 4px}
+.first-team,.left-team,.match-time{
+  width:33.333%;
+  padding:8px 4px;
+}
 .team-logo img{
   width:54px;
   height:54px;
@@ -270,27 +265,6 @@ body.light .sidenav{background:#ffffff}
 .match-date.live{background:var(--red);animation:liveBlink .7s infinite}
 .match-date.end{background:var(--gray)}
 @keyframes liveBlink{50%{filter:brightness(.65)}}
-
-.match-info{
-  border-top:1px solid var(--line);
-  padding:8px 6px;
-}
-.match-info ul{
-  display:flex;
-  margin:0;
-  padding:0;
-  list-style:none;
-}
-.match-info li{
-  width:33.333%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:var(--muted);
-  font-size:12px;
-  text-align:center;
-}
-
 .overlay-play{
   position:absolute;
   inset:0;
@@ -314,7 +288,7 @@ body.light .sidenav{background:#ffffff}
 }
 .play-icon i{width:25px;height:25px}
 
-/* Player merged */
+/* Player */
 #playerRoot{
   position:fixed;
   inset:0;
@@ -347,7 +321,7 @@ video.fit-fill{object-fit:fill!important}
   top:0;
   right:0;
   left:0;
-  z-index:500;
+  z-index:999;
   height:62px;
   padding:10px 12px;
   display:flex;
@@ -391,7 +365,7 @@ video.fit-fill{object-fit:fill!important}
   top:65px;
   right:10px;
   left:10px;
-  z-index:500;
+  z-index:999;
   display:flex;
   gap:8px;
   overflow-x:auto;
@@ -410,14 +384,17 @@ video.fit-fill{object-fit:fill!important}
   white-space:nowrap;
   cursor:pointer;
 }
-.server-btn.active{background:#fff;color:#000}
+.server-btn.active{
+  background:#fff;
+  color:#000;
+}
 
 .center-control{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  z-index:500;
+  z-index:999;
   display:flex;
   align-items:center;
   gap:18px;
@@ -444,7 +421,7 @@ video.fit-fill{object-fit:fill!important}
   left:0;
   right:0;
   bottom:0;
-  z-index:500;
+  z-index:999;
   padding:12px;
   background:linear-gradient(to top, rgba(0,0,0,.82), rgba(0,0,0,0));
 }
@@ -456,7 +433,14 @@ video.fit-fill{object-fit:fill!important}
   overflow:hidden;
   margin-bottom:10px;
 }
-.progress-played{position:absolute;top:0;bottom:0;left:0;width:0;background:#fff}
+.progress-played{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  width:0;
+  background:#fff;
+}
 .bottom-row{
   display:flex;
   align-items:center;
@@ -470,7 +454,25 @@ video.fit-fill{object-fit:fill!important}
   font-weight:700;
   direction:ltr;
 }
-.icon-row{display:flex;gap:8px}
+.icon-row{
+  display:flex;
+  gap:8px;
+}
+
+.player-top,.server-strip,.center-control,.player-bottom{
+  transition:opacity .25s ease,transform .25s ease;
+}
+.player-controls-hidden .player-top,
+.player-controls-hidden .server-strip,
+.player-controls-hidden .center-control,
+.player-controls-hidden .player-bottom{
+  opacity:0;
+  pointer-events:none;
+}
+.player-controls-hidden .player-top{transform:translateY(-8px)}
+.player-controls-hidden .player-bottom{transform:translateY(8px)}
+.player-controls-hidden .server-strip{transform:translateY(-8px)}
+
 #loading,#buffer{
   position:absolute;
   top:50%;
@@ -478,11 +480,21 @@ video.fit-fill{object-fit:fill!important}
   transform:translate(-50%,-50%);
   border-radius:50%;
   display:none;
-  z-index:600;
+  z-index:1000;
   animation:spin 1s linear infinite;
 }
-#loading{width:48px;height:48px;border:4px solid rgba(255,255,255,.22);border-top-color:#fff}
-#buffer{width:84px;height:84px;border:6px solid rgba(255,255,255,.22);border-top-color:#fff}
+#loading{
+  width:48px;
+  height:48px;
+  border:4px solid rgba(255,255,255,.22);
+  border-top-color:#fff;
+}
+#buffer{
+  width:84px;
+  height:84px;
+  border:6px solid rgba(255,255,255,.22);
+  border-top-color:#fff;
+}
 @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 
 #errorOverlay{
@@ -496,7 +508,7 @@ video.fit-fill{object-fit:fill!important}
   justify-content:center;
   text-align:center;
   padding:20px;
-  z-index:99999;
+  z-index:10000;
 }
 .retry{
   border:none;
@@ -508,10 +520,9 @@ video.fit-fill{object-fit:fill!important}
   font-family:'Tajawal';
   cursor:pointer;
 }
-
 .toast{
   position:fixed;
-  z-index:10000;
+  z-index:10001;
   right:50%;
   bottom:88px;
   transform:translateX(50%);
@@ -523,38 +534,6 @@ video.fit-fill{object-fit:fill!important}
   font-weight:800;
 }
 .toast.show{display:block}
-
-/* محاولة عرض المشغل بشكل أفقي حتى على الهاتف */
-@media screen and (orientation: portrait) and (max-width: 900px){
-  #playerRoot.show .player-wrapper{
-    width:100vh;
-    height:100vw;
-    transform:rotate(90deg) translateY(-100%);
-    transform-origin:top left;
-    position:absolute;
-    top:0;
-    left:0;
-  }
-}
-
-
-.player-top,
-.server-strip,
-.center-control,
-.player-bottom{
-  transition: opacity .25s ease, transform .25s ease;
-}
-.player-controls-hidden .player-top,
-.player-controls-hidden .server-strip,
-.player-controls-hidden .center-control,
-.player-controls-hidden .player-bottom{
-  opacity:0;
-  pointer-events:none;
-}
-.player-controls-hidden .player-top{transform:translateY(-8px)}
-.player-controls-hidden .player-bottom{transform:translateY(8px)}
-.player-controls-hidden .server-strip{transform:translateY(-8px)}
-
 </style>
 </head>
 
@@ -565,18 +544,10 @@ video.fit-fill{object-fit:fill!important}
   <button class="header-btn" id="themePageBtn"><i data-feather="moon"></i></button>
 </header>
 
-<div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-  <a href="#">مشاركة التطبيق</a>
-  <a href="#">سياسة الخصوصية</a>
-  <a href="#">اتصل بنا</a>
-</div>
-
 <div id="page">
   <div class="empty">جاري تحميل المباريات...</div>
 </div>
 
-<!-- المشغل داخل نفس الصفحة -->
 <div id="playerRoot">
   <div class="player-wrapper">
     <video id="video" playsinline autoplay></video>
@@ -626,664 +597,724 @@ video.fit-fill{object-fit:fill!important}
 <div class="toast" id="toast"></div>
 
 <script>
-feather.replace();
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAGhmOqXWxmr2ULOzNMMDuLlxCeTmUNpis",
-  databaseURL: "https://frsin-araq-default-rtdb.firebaseio.com",
-  projectId: "frsin-araq",
-  storageBucket: "frsin-araq.firebasestorage.app",
-  messagingSenderId: "813355696991",
-  appId: "1:813355696991:android:4a58ec98591210bf77acea"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-const WORKER_BASE = "https://ali.albesriali8.workers.dev/";
-
-const page = document.getElementById("page");
-const video = document.getElementById("video");
-const playerRoot = document.getElementById("playerRoot");
-const playerTitle = document.getElementById("playerTitle");
-const serverStrip = document.getElementById("serverStrip");
-const loading = document.getElementById("loading");
-const buffer = document.getElementById("buffer");
-const errorOverlay = document.getElementById("errorOverlay");
-const errorTitle = document.getElementById("errorTitle");
-const errorMsg = document.getElementById("errorMsg");
-const progress = document.getElementById("progress");
-const progressPlayed = document.getElementById("progressPlayed");
-const playerTime = document.getElementById("playerTime");
-const toast = document.getElementById("toast");
-
-let hls = null;
-let shakaPlayer = null;
-let currentServers = [];
-let currentIndex = 0;
-let lastMatchTitle = "";
-let fitIndex = 2;
-let rotated = false;
-let retryCount = 0;
-let controlsTimer = null;
-
-function showPlayerControls(){
-  playerRoot.classList.remove("player-controls-hidden");
-  clearTimeout(controlsTimer);
-  controlsTimer = setTimeout(()=>{
-    if(playerRoot.classList.contains("show")){
-      playerRoot.classList.add("player-controls-hidden");
-    }
-  }, 3000);
-}
-
-function hidePlayerControlsNow(){
-  clearTimeout(controlsTimer);
-  playerRoot.classList.add("player-controls-hidden");
-}
-
-const MAX_RETRY = 999;
-let suppressVideoError = false;
-let softRecovering = false;
-
-const fitModes = [
-  { cls:"fit-contain", icon:"minimize-2", label:"ملاءمة" },
-  { cls:"fit-cover", icon:"crop", label:"قص" },
-  { cls:"fit-fill", icon:"maximize-2", label:"تمدد" }
-];
-
-function openNav(){ document.getElementById("mySidenav").style.width = "260px"; }
-function closeNav(){ document.getElementById("mySidenav").style.width = "0"; }
-
-document.getElementById("backHomeBtn").onclick = () => history.back();
-
-function setThemeIcon(){
-  const icon = document.body.classList.contains("light") ? "sun" : "moon";
-  document.getElementById("themePageBtn").innerHTML = `<i data-feather="${icon}"></i>`;
-  document.getElementById("playerThemeBtn").innerHTML = `<i data-feather="${icon}"></i>`;
+document.addEventListener("DOMContentLoaded", function(){
   feather.replace();
-}
-function toggleTheme(){
-  document.body.classList.toggle("light");
-  localStorage.setItem("bsr_theme", document.body.classList.contains("light") ? "light" : "dark");
-  setThemeIcon();
-}
-if(localStorage.getItem("bsr_theme") === "light") document.body.classList.add("light");
-setThemeIcon();
-document.getElementById("themePageBtn").onclick = toggleTheme;
-document.getElementById("playerThemeBtn").onclick = toggleTheme;
 
-function toastMsg(msg){
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"), 1700);
-}
-
-function safe(v, fallback=""){
-  return (v === undefined || v === null || v === "") ? fallback : v;
-}
-
-function getHomeName(m){ return safe(m.home_name, safe(m.homeName, safe(m.home, safe(m.homeTeam, safe(m.home_team?.title, "الفريق الأول"))))); }
-function getAwayName(m){ return safe(m.away_name, safe(m.awayName, safe(m.away, safe(m.awayTeam, safe(m.away_team?.title, "الفريق الثاني"))))); }
-function getHomeLogo(m){ return safe(m.home_logo, safe(m.homeLogo, safe(m.home_team?.logo, safe(m.home_team?.image, "")))); }
-function getAwayLogo(m){ return safe(m.away_logo, safe(m.awayLogo, safe(m.away_team?.logo, safe(m.away_team?.image, "")))); }
-function getChamp(m){ return safe(m.championship_name, safe(m.championship, safe(m.league, "BSR LIVE"))); }
-function getChannel(m){ return safe(m.selected_channel_name, safe(m.channel, "قناة المباراة")); }
-
-function normalizeServers(m){
-  const s = m.servers || m.qualities || [];
-  if(Array.isArray(s)) return s.filter(x => x && x.url);
-  if(typeof s === "object") return Object.values(s).filter(x => x && x.url);
-  return [];
-}
-
-function toEnglishDigits(str){
-  return String(str || "")
-    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
-    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
-}
-
-function format12Hour(timeValue, dateValue){
-  if(!timeValue) return "";
-  let raw = toEnglishDigits(String(timeValue)).trim();
-
-  let d = null;
-  if(dateValue){
-    d = new Date(`${dateValue}T${raw}`);
-  }
-  if(!d || isNaN(d.getTime())){
-    d = new Date(`2000-01-01T${raw}`);
-  }
-  if(isNaN(d.getTime())){
-    const m = raw.match(/(\d{1,2}):(\d{2})/);
-    if(!m) return raw;
-    let h = parseInt(m[1], 10), min = m[2];
-    const suffix = h >= 12 ? "م" : "ص";
-    h = h % 12; if(h === 0) h = 12;
-    return `${h}:${min} ${suffix}`;
-  }
-  let h = d.getHours();
-  const min = String(d.getMinutes()).padStart(2,"0");
-  const suffix = h >= 12 ? "م" : "ص";
-  h = h % 12; if(h === 0) h = 12;
-  return `${h}:${min} ${suffix}`;
-}
-
-function getStatus(m){
-  const s = Number(m.status ?? m.match_status ?? 0);
-  const statusText = String(m.status_text || m.statusText || "").trim();
-
-  if(statusText.includes("انتهت") || s === 4) return { text:"انتهت", cls:"end", order:3, showScore:true };
-  if(statusText.includes("جارية") || statusText.includes("مباشر") || [1,2,3].includes(s)) return { text:"جارية الآن", cls:"live", order:1, showScore:true };
-
-  const d = m.match_date || m.date || "";
-  const t = m.match_time || m.time || "";
-  if(d && t){
-    const mt = new Date(`${d}T${toEnglishDigits(t)}`);
-    if(!isNaN(mt.getTime()) && Date.now() >= mt.getTime()) return { text:"جارية الآن", cls:"live", order:1, showScore:true };
-  }
-
-  return { text:"لم تبدأ", cls:"soon", order:2, showScore:false };
-}
-
-function getScore(m){
-  const hs = safe(m.home_scores, safe(m.homeScore, "0"));
-  const as = safe(m.away_scores, safe(m.awayScore, "0"));
-  return `${hs} - ${as}`;
-}
-
-function renderMatch(m){
-  const home = getHomeName(m);
-  const away = getAwayName(m);
-  const homeLogo = getHomeLogo(m) || "https://via.placeholder.com/80?text=H";
-  const awayLogo = getAwayLogo(m) || "https://via.placeholder.com/80?text=A";
-  const status = getStatus(m);
-  const timeText = format12Hour(m.match_time || m.time, m.match_date || m.date);
-  const servers = normalizeServers(m);
-
-  const card = document.createElement("div");
-  card.className = "match-event";
-  card.style.order = status.order;
-
-  card.innerHTML = `
-    <div class="match-main">
-      <div class="first-team">
-        <div class="team-logo"><img src="${homeLogo}" onerror="this.src='https://via.placeholder.com/80?text=H'"></div>
-        <div class="team-name">${home}</div>
-      </div>
-
-      <div class="match-time">
-        ${status.showScore ? `<div class="result-now">${getScore(m)}</div>` : `<div class="match-hour">${timeText}</div>`}
-        <div class="match-date ${status.cls}">${status.text}</div>
-      </div>
-
-      <div class="left-team">
-        <div class="team-logo"><img src="${awayLogo}" onerror="this.src='https://via.placeholder.com/80?text=A'"></div>
-        <div class="team-name">${away}</div>
-      </div>
-    </div>
-
-    <div class="overlay-play">
-      <div class="play-icon"><i data-feather="play"></i></div>
-    </div>
-  `;
-
-  card.onclick = () => {
-    if(!servers.length){
-      toastMsg("لا يوجد سيرفر لهذه المباراة");
-      return;
-    }
-    openPlayer({
-      title: `${home} VS ${away}`,
-      servers
-    });
+  const firebaseConfig = {
+    apiKey: "AIzaSyAGhmOqXWxmr2ULOzNMMDuLlxCeTmUNpis",
+    databaseURL: "https://frsin-araq-default-rtdb.firebaseio.com",
+    projectId: "frsin-araq",
+    storageBucket: "frsin-araq.firebasestorage.app",
+    messagingSenderId: "813355696991",
+    appId: "1:813355696991:android:4a58ec98591210bf77acea"
   };
 
-  return card;
-}
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
 
-db.ref("matches").on("value", snap => {
-  const data = snap.val() || {};
-  const list = Object.values(data).filter(m => m && (m.published === true || m.published === "true" || m.isPublished === true || m.home || m.home_name || m.homeName));
-  page.innerHTML = "";
+  const WORKER_BASE = "https://ali.albesriali8.workers.dev/";
 
-  if(!list.length){
-    page.innerHTML = `<div class="empty">لا توجد مباريات ظاهرة حالياً</div>`;
-    return;
+  const page = document.getElementById("page");
+  const video = document.getElementById("video");
+  const playerRoot = document.getElementById("playerRoot");
+  const playerTitle = document.getElementById("playerTitle");
+  const serverStrip = document.getElementById("serverStrip");
+  const loading = document.getElementById("loading");
+  const buffer = document.getElementById("buffer");
+  const errorOverlay = document.getElementById("errorOverlay");
+  const errorTitle = document.getElementById("errorTitle");
+  const errorMsg = document.getElementById("errorMsg");
+  const progress = document.getElementById("progress");
+  const progressPlayed = document.getElementById("progressPlayed");
+  const playerTime = document.getElementById("playerTime");
+  const toast = document.getElementById("toast");
+
+  let shakaPlayer = null;
+  let currentServers = [];
+  let currentIndex = 0;
+  let fitIndex = 2;
+  let rotated = false;
+  let controlsTimer = null;
+  let suppressVideoError = false;
+  let directFallbackTried = false;
+
+  const fitModes = [
+    {cls:"fit-contain", icon:"minimize-2", label:"ملاءمة"},
+    {cls:"fit-cover", icon:"crop", label:"قص"},
+    {cls:"fit-fill", icon:"maximize-2", label:"تمدد"}
+  ];
+
+  function toastMsg(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(function(){ toast.classList.remove("show"); }, 1700);
   }
 
-  list.sort((a,b)=>getStatus(a).order - getStatus(b).order);
-  list.forEach(m => page.appendChild(renderMatch(m)));
-  feather.replace();
-});
+  function safe(v, f){
+    return (v === undefined || v === null || v === "") ? (f || "") : v;
+  }
 
-/* Player */
-function detectType(url){
-  const u = String(url || "").toLowerCase();
-  if(u.includes("#hls") || u.includes(".m3u8")) return "hls";
-  if(u.includes(".mpd")) return "dash";
-  return "file";
-}
-function buildProxyUrl(src){
-  const params = new URLSearchParams();
-  params.set("url", src.url || "");
-  if(src.userAgent) params.set("ua", src.userAgent);
-  if(src.referer) params.set("ref", src.referer);
-  if(src.origin) params.set("origin", src.origin);
-  if(String(src.url || "").toLowerCase().includes("#hls")) params.set("type", "hls");
-  params.set("_", Date.now().toString());
-  return WORKER_BASE + "?" + params.toString();
-}
-function destroyPlayer(){
-  try{ if(hls){ hls.destroy(); hls = null; } }catch(e){}
-  try{ if(shakaPlayer){ shakaPlayer.destroy(); shakaPlayer = null; } }catch(e){}
-  video.pause();
-  video.removeAttribute("src");
-  try{ video.load(); }catch(e){}
-}
-function showError(t,m){
-  loading.style.display="none";
-  buffer.style.display="none";
-  errorTitle.textContent = t;
-  errorMsg.textContent = m;
-  errorOverlay.style.display="flex";
-  feather.replace();
-}
-function hideError(){ errorOverlay.style.display="none"; }
+  function getHomeName(m){
+    return safe(m.home_name, safe(m.homeName, safe(m.home, safe(m.homeTeam, safe(m.home_team && m.home_team.title, "الفريق الأول")))));
+  }
 
+  function getAwayName(m){
+    return safe(m.away_name, safe(m.awayName, safe(m.away, safe(m.awayTeam, safe(m.away_team && m.away_team.title, "الفريق الثاني")))));
+  }
 
-async function enterLandscapeMode(){
-  try{
-    if(playerRoot.requestFullscreen) await playerRoot.requestFullscreen();
-    else if(playerRoot.webkitRequestFullscreen) await playerRoot.webkitRequestFullscreen();
-  }catch(e){}
+  function getHomeLogo(m){
+    return safe(m.home_logo, safe(m.homeLogo, safe(m.home_team && (m.home_team.logo || m.home_team.image), "")));
+  }
 
-  try{
-    if(screen.orientation && screen.orientation.lock){
-      await screen.orientation.lock("landscape");
+  function getAwayLogo(m){
+    return safe(m.away_logo, safe(m.awayLogo, safe(m.away_team && (m.away_team.logo || m.away_team.image), "")));
+  }
+
+  function normalizeServers(m){
+    const s = m.servers || m.qualities || [];
+    if(Array.isArray(s)) return s.filter(function(x){ return x && x.url; });
+    if(typeof s === "object") return Object.values(s).filter(function(x){ return x && x.url; });
+    return [];
+  }
+
+  function toEnglishDigits(str){
+    return String(str || "")
+      .replace(/[٠-٩]/g, function(d){ return "٠١٢٣٤٥٦٧٨٩".indexOf(d); })
+      .replace(/[۰-۹]/g, function(d){ return "۰۱۲۳۴۵۶۷۸۹".indexOf(d); });
+  }
+
+  function format12Hour(timeValue, dateValue){
+    if(!timeValue) return "";
+    let raw = toEnglishDigits(String(timeValue)).trim();
+    let d = dateValue ? new Date(dateValue + "T" + raw) : null;
+
+    if(!d || isNaN(d.getTime())) d = new Date("2000-01-01T" + raw);
+
+    if(isNaN(d.getTime())){
+      const m = raw.match(/(\d{1,2}):(\d{2})/);
+      if(!m) return raw;
+      let h = parseInt(m[1], 10);
+      const min = m[2];
+      const suffix = h >= 12 ? "م" : "ص";
+      h = h % 12;
+      if(h === 0) h = 12;
+      return h + ":" + min + " " + suffix;
     }
-  }catch(e){}
-}
 
-function openPlayer(payload){
-  feather.replace();
-  currentServers = payload.servers || [];
-  currentIndex = 0;
-  lastMatchTitle = payload.title || "BSR LIVE";
-  playerTitle.textContent = lastMatchTitle;
-  playerRoot.classList.add("show");
-  showPlayerControls();
-  enterLandscapeMode();
-  buildServerButtons();
-  playServer(0);
-}
-function closePlayer(){
-  destroyPlayer();
-  clearTimeout(controlsTimer);
-  playerRoot.classList.remove("player-controls-hidden");
-  playerRoot.classList.remove("show");
-  try{
-    if(screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
-  }catch(e){}
-  try{
-    if(document.fullscreenElement) document.exitFullscreen();
-    else if(document.webkitFullscreenElement) document.webkitExitFullscreen();
-  }catch(e){}
-}
-document.getElementById("playerBackBtn").onclick = closePlayer;
-
-playerRoot.addEventListener("click", (e)=>{
-  const interactive = e.target.closest("button,.server-btn,#progress");
-  if(interactive) {
-    showPlayerControls();
-    return;
+    let h = d.getHours();
+    const min = String(d.getMinutes()).padStart(2, "0");
+    const suffix = h >= 12 ? "م" : "ص";
+    h = h % 12;
+    if(h === 0) h = 12;
+    return h + ":" + min + " " + suffix;
   }
-  if(playerRoot.classList.contains("player-controls-hidden")) showPlayerControls();
-  else hidePlayerControlsNow();
-});
 
-playerRoot.addEventListener("mousemove", ()=>{
-  if(playerRoot.classList.contains("show")) showPlayerControls();
-});
+  function getStatus(m){
+    const s = Number(m.status !== undefined ? m.status : (m.match_status || 0));
+    const txt = String(m.status_text || m.statusText || "");
 
+    if(txt.includes("انتهت") || s === 4){
+      return {text:"انتهت", cls:"end", order:3, showScore:true};
+    }
 
-function buildServerButtons(){
-  serverStrip.innerHTML = "";
-  currentServers.forEach((s,i)=>{
-    const b = document.createElement("button");
-    b.className = "server-btn" + (i===currentIndex ? " active" : "");
-    b.textContent = s.label || `Server ${i+1}`;
-    b.onclick = () => { showPlayerControls(); playServer(i); };
-    serverStrip.appendChild(b);
+    if(txt.includes("جارية") || txt.includes("مباشر") || [1,2,3].includes(s)){
+      return {text:"جارية الآن", cls:"live", order:1, showScore:true};
+    }
+
+    const d = m.match_date || m.date || "";
+    const t = m.match_time || m.time || "";
+
+    if(d && t){
+      const mt = new Date(d + "T" + toEnglishDigits(t));
+      if(!isNaN(mt.getTime()) && Date.now() >= mt.getTime()){
+        return {text:"جارية الآن", cls:"live", order:1, showScore:true};
+      }
+    }
+
+    return {text:"لم تبدأ", cls:"soon", order:2, showScore:false};
+  }
+
+  function getScore(m){
+    return safe(m.home_scores, safe(m.homeScore, "0")) + " - " + safe(m.away_scores, safe(m.awayScore, "0"));
+  }
+
+  function renderMatch(m){
+    const home = getHomeName(m);
+    const away = getAwayName(m);
+    const status = getStatus(m);
+    const servers = normalizeServers(m);
+    const homeLogo = getHomeLogo(m) || "https://via.placeholder.com/80?text=H";
+    const awayLogo = getAwayLogo(m) || "https://via.placeholder.com/80?text=A";
+    const timeText = format12Hour(m.match_time || m.time, m.match_date || m.date);
+
+    const card = document.createElement("div");
+    card.className = "match-event";
+    card.style.order = status.order;
+
+    card.innerHTML =
+      '<div class="match-main">' +
+        '<div class="first-team">' +
+          '<div class="team-logo"><img src="' + homeLogo + '" onerror="this.src=\'https://via.placeholder.com/80?text=H\'"></div>' +
+          '<div class="team-name">' + home + '</div>' +
+        '</div>' +
+        '<div class="match-time">' +
+          (status.showScore ? '<div class="result-now">' + getScore(m) + '</div>' : '<div class="match-hour">' + timeText + '</div>') +
+          '<div class="match-date ' + status.cls + '">' + status.text + '</div>' +
+        '</div>' +
+        '<div class="left-team">' +
+          '<div class="team-logo"><img src="' + awayLogo + '" onerror="this.src=\'https://via.placeholder.com/80?text=A\'"></div>' +
+          '<div class="team-name">' + away + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="overlay-play"><div class="play-icon"><i data-feather="play"></i></div></div>';
+
+    card.onclick = function(){
+      if(!servers.length){
+        toastMsg("لا يوجد سيرفر لهذه المباراة");
+        return;
+      }
+
+      openPlayer({
+        title: home + " VS " + away,
+        servers: servers
+      });
+    };
+
+    return card;
+  }
+
+  db.ref("matches").on("value", function(snap){
+    const data = snap.val() || {};
+    const list = Object.values(data).filter(function(m){
+      return m && (
+        m.published === true ||
+        m.published === "true" ||
+        m.isPublished === true ||
+        m.home ||
+        m.home_name ||
+        m.homeName
+      );
+    });
+
+    page.innerHTML = "";
+
+    if(!list.length){
+      page.innerHTML = '<div class="empty">لا توجد مباريات ظاهرة حالياً</div>';
+      return;
+    }
+
+    list.sort(function(a,b){
+      return getStatus(a).order - getStatus(b).order;
+    });
+
+    list.forEach(function(m){
+      page.appendChild(renderMatch(m));
+    });
+
+    feather.replace();
   });
-}
-async function playServer(i, isRetry = false){
-  const src = currentServers[i];
-  if(!src || !src.url){
-    showError("لا يوجد سيرفر", "لا يوجد رابط لهذه المباراة.");
-    return;
+
+  function setThemeIcon(){
+    const icon = document.body.classList.contains("light") ? "sun" : "moon";
+    document.getElementById("themePageBtn").innerHTML = '<i data-feather="' + icon + '"></i>';
+    document.getElementById("playerThemeBtn").innerHTML = '<i data-feather="' + icon + '"></i>';
+    feather.replace();
   }
 
-  if(!isRetry) retryCount = 0;
+  function toggleTheme(){
+    document.body.classList.toggle("light");
+    localStorage.setItem("bsr_theme", document.body.classList.contains("light") ? "light" : "dark");
+    setThemeIcon();
+  }
 
-  currentIndex = i;
-  buildServerButtons();
-  suppressVideoError = true;
-  destroyPlayer();
-  setTimeout(()=>{ suppressVideoError = false; }, 900);
-  hideError();
-  loading.style.display="block";
+  if(localStorage.getItem("bsr_theme") === "light") document.body.classList.add("light");
+  setThemeIcon();
 
-  const type = detectType(src.url);
-  const finalUrl = buildProxyUrl(src);
+  document.getElementById("themePageBtn").onclick = toggleTheme;
+  document.getElementById("playerThemeBtn").onclick = toggleTheme;
+  document.getElementById("backHomeBtn").onclick = function(){ history.back(); };
 
-  try{
-    if(type === "dash"){
+  function showPlayerControls(){
+    playerRoot.classList.remove("player-controls-hidden");
+    clearTimeout(controlsTimer);
+    controlsTimer = setTimeout(function(){
+      if(playerRoot.classList.contains("show")){
+        playerRoot.classList.add("player-controls-hidden");
+      }
+    }, 3000);
+  }
+
+  function hidePlayerControlsNow(){
+    clearTimeout(controlsTimer);
+    playerRoot.classList.add("player-controls-hidden");
+  }
+
+  async function enterLandscapeMode(){
+    try{
+      if(playerRoot.requestFullscreen) await playerRoot.requestFullscreen();
+      else if(playerRoot.webkitRequestFullscreen) await playerRoot.webkitRequestFullscreen();
+    }catch(e){}
+
+    try{
+      if(screen.orientation && screen.orientation.lock){
+        await screen.orientation.lock("landscape");
+      }
+    }catch(e){}
+  }
+
+  function openPlayer(payload){
+    feather.replace();
+    currentServers = payload.servers || [];
+    currentIndex = 0;
+    directFallbackTried = false;
+    playerTitle.textContent = payload.title || "BSR LIVE";
+    playerRoot.classList.add("show");
+    showPlayerControls();
+    enterLandscapeMode();
+    buildServerButtons();
+    playServer(0);
+  }
+
+  function closePlayer(){
+    destroyPlayer();
+    clearTimeout(controlsTimer);
+    playerRoot.classList.remove("player-controls-hidden");
+    playerRoot.classList.remove("show");
+
+    try{
+      if(screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+    }catch(e){}
+
+    try{
+      if(document.fullscreenElement) document.exitFullscreen();
+      else if(document.webkitFullscreenElement) document.webkitExitFullscreen();
+    }catch(e){}
+  }
+
+  document.getElementById("playerBackBtn").onclick = closePlayer;
+
+  // لمسة واحدة على شاشة المشغل:
+  // إذا الأيقونات مخفية تظهر، وإذا ظاهرة تختفي
+  playerRoot.addEventListener("click", function(e){
+    const interactive = e.target.closest("button,.server-btn,#progress");
+
+    if(interactive){
+      e.stopPropagation();
+      showPlayerControls();
+      return;
+    }
+
+    if(playerRoot.classList.contains("player-controls-hidden")){
+      showPlayerControls();
+    }else{
+      hidePlayerControlsNow();
+    }
+  });
+
+  // دعم اللمس على الموبايل بدون دبل كليك
+  playerRoot.addEventListener("touchend", function(e){
+    const interactive = e.target.closest("button,.server-btn,#progress");
+
+    if(interactive){
+      showPlayerControls();
+      return;
+    }
+
+    e.preventDefault();
+
+    if(playerRoot.classList.contains("player-controls-hidden")){
+      showPlayerControls();
+    }else{
+      hidePlayerControlsNow();
+    }
+  }, {passive:false});
+
+  // منع لمس الأزرار من إخفاء الأيقونات
+  document.querySelectorAll(".pbtn,.round-btn,.server-btn,#progress").forEach(function(el){
+    el.addEventListener("click", function(e){
+      e.stopPropagation();
+      showPlayerControls();
+    });
+    el.addEventListener("touchend", function(e){
+      e.stopPropagation();
+      showPlayerControls();
+    }, {passive:true});
+  });
+
+  function buildProxyUrl(src){
+    const params = new URLSearchParams();
+    params.set("url", src.url || "");
+
+    if(src.userAgent) params.set("ua", src.userAgent);
+    if(src.referer) params.set("ref", src.referer);
+    if(src.origin) params.set("origin", src.origin);
+
+    if(String(src.url || "").toLowerCase().includes("#hls")){
+      params.set("type", "hls");
+    }
+
+    params.set("_", Date.now().toString());
+    return WORKER_BASE + "?" + params.toString();
+  }
+
+  function shouldUseWorker(src){
+    const url = String(src.url || "").toLowerCase();
+
+    if(src._forceWorker) return true;
+    if(src.userAgent || src.referer || src.origin) return true;
+    if(url.includes("#hls")) return true;
+    if(url.includes(".mpd") && src.drmKey) return true;
+
+    return false;
+  }
+
+  function getPlayUrl(src){
+    if(shouldUseWorker(src)) return buildProxyUrl(src);
+    return src.url;
+  }
+
+  function destroyPlayer(){
+    try{
+      if(shakaPlayer){
+        shakaPlayer.destroy();
+        shakaPlayer = null;
+      }
+    }catch(e){}
+
+    video.pause();
+    video.removeAttribute("src");
+
+    try{
+      video.load();
+    }catch(e){}
+  }
+
+  function showError(title, msg){
+    loading.style.display = "none";
+    buffer.style.display = "none";
+    errorTitle.textContent = title;
+    errorMsg.textContent = msg;
+    errorOverlay.style.display = "flex";
+    feather.replace();
+  }
+
+  function hideError(){
+    errorOverlay.style.display = "none";
+  }
+
+  function buildServerButtons(){
+    serverStrip.innerHTML = "";
+
+    currentServers.forEach(function(s, i){
+      const b = document.createElement("button");
+      b.className = "server-btn" + (i === currentIndex ? " active" : "");
+      b.textContent = s.label || ("Server " + (i + 1));
+      b.onclick = function(){
+        showPlayerControls();
+        playServer(i);
+      };
+      serverStrip.appendChild(b);
+    });
+  }
+
+  function parseClearKey(ckString){
+    if(!ckString) return null;
+
+    const parts = ckString.split(":");
+    if(parts.length !== 2) return null;
+
+    return {
+      kid: parts[0].trim().replace(/-/g, "").toLowerCase(),
+      key: parts[1].trim().replace(/-/g, "").toLowerCase()
+    };
+  }
+
+  async function playServer(i, isRetry){
+    const src = currentServers[i];
+
+    if(!src || !src.url){
+      showError("لا يوجد سيرفر", "لا يوجد رابط لهذه المباراة.");
+      return;
+    }
+
+    if(!isRetry){
+      directFallbackTried = false;
+    }
+
+    currentIndex = i;
+    buildServerButtons();
+
+    suppressVideoError = true;
+    destroyPlayer();
+
+    setTimeout(function(){
+      suppressVideoError = false;
+    }, 1000);
+
+    hideError();
+    loading.style.display = "block";
+
+    const finalUrl = getPlayUrl(src);
+
+    try{
       shaka.polyfill.installAll();
-      if(!shaka.Player.isBrowserSupported()) throw new Error("المتصفح لا يدعم DASH");
+
+      if(!shaka.Player.isBrowserSupported()){
+        throw new Error("المتصفح لا يدعم Shaka Player");
+      }
 
       shakaPlayer = new shaka.Player(video);
 
       shakaPlayer.configure({
-        streaming: {
-          bufferingGoal: 30,
-          rebufferingGoal: 2,
-          retryParameters: {
-            timeout: 15000,
-            maxAttempts: 4,
-            baseDelay: 1000,
-            backoffFactor: 2,
-            fuzzFactor: 0.5
+        streaming:{
+          bufferingGoal:45,
+          rebufferingGoal:2,
+          bufferBehind:30,
+          retryParameters:{
+            timeout:30000,
+            maxAttempts:8,
+            baseDelay:1000,
+            backoffFactor:2,
+            fuzzFactor:0.5
+          }
+        },
+        manifest:{
+          retryParameters:{
+            timeout:30000,
+            maxAttempts:8,
+            baseDelay:1000,
+            backoffFactor:2,
+            fuzzFactor:0.5
           }
         }
       });
 
-      shakaPlayer.addEventListener("error", () => toastMsg("DASH يحاول الاستمرار..."));
+      const engine = shakaPlayer.getNetworkingEngine();
+      if(engine){
+        engine.registerRequestFilter(function(type, request){
+          if(src.userAgent) request.headers["User-Agent"] = src.userAgent;
+          if(src.referer) request.headers["Referer"] = src.referer;
+          if(src.origin) request.headers["Origin"] = src.origin;
+        });
+      }
+
       const ck = parseClearKey(src.drmKey || "");
-      if(ck) shakaPlayer.configure({drm:{clearKeys:{[ck.kid]:ck.key}}});
+      if(ck){
+        shakaPlayer.configure({
+          drm:{
+            clearKeys:{
+              [ck.kid]:ck.key
+            }
+          }
+        });
+      }
+
+      shakaPlayer.addEventListener("error", function(event){
+        console.log("Shaka Error:", event.detail);
+
+        if(!shouldUseWorker(currentServers[currentIndex]) && !directFallbackTried){
+          directFallbackTried = true;
+          currentServers[currentIndex]._forceWorker = true;
+          toastMsg("تجربة التشغيل عبر Worker...");
+          setTimeout(function(){
+            playServer(currentIndex, true);
+          }, 1000);
+          return;
+        }
+
+        toastMsg("جاري محاولة متابعة البث...");
+      });
 
       await shakaPlayer.load(finalUrl);
-      await video.play().catch(()=>{});
-    } else if(type === "hls"){
-      if(video.canPlayType("application/vnd.apple.mpegurl")){
-        video.src = finalUrl;
-        video.load();
-        await video.play().catch(()=>{});
-      } else if(window.Hls && Hls.isSupported()){
-        hls = new Hls({
-          enableWorker: true,
-          lowLatencyMode: false,
-          liveSyncDurationCount: 5,
-          liveMaxLatencyDurationCount: 15,
-          maxBufferLength: 60,
-          maxMaxBufferLength: 120,
-          backBufferLength: 20,
-          fragLoadingTimeOut: 20000,
-          manifestLoadingTimeOut: 20000,
-          levelLoadingTimeOut: 20000,
-          fragLoadingMaxRetry: 6,
-          manifestLoadingMaxRetry: 6,
-          levelLoadingMaxRetry: 6,
-          fragLoadingRetryDelay: 1200,
-          manifestLoadingRetryDelay: 1200,
-          levelLoadingRetryDelay: 1200
-        });
 
-        hls.loadSource(finalUrl);
-        hls.attachMedia(video);
+      video.addEventListener("canplay", function(){
+        video.play().catch(function(){});
+      }, {once:true});
 
-        hls.on(Hls.Events.ERROR, function(event, data){
-          if(!data || !data.fatal) return;
+      await video.play().catch(function(){});
 
-          if(data.type === Hls.ErrorTypes.NETWORK_ERROR){
-            try {
-              hls.startLoad();
-              toastMsg("جاري متابعة البث...");
-            } catch(e) {}
-            return;
-          }
+      loading.style.display = "none";
+      setPlayIcon();
+      showPlayerControls();
 
-          if(data.type === Hls.ErrorTypes.MEDIA_ERROR){
-            try {
-              hls.recoverMediaError();
-              toastMsg("جاري تصحيح البث...");
-            } catch(e) {}
-            return;
-          }
+    }catch(e){
+      loading.style.display = "none";
 
-          // إذا الخطأ قوي، لا نوقف المشغل؛ نعيد الاتصال بنفس السيرفر
-          autoRetry("HLS fatal");
-        });
-
-        await new Promise((resolve,reject)=>{
-          const timer = setTimeout(()=>reject(new Error("انتهت مهلة تحميل القناة")), 22000);
-          hls.on(Hls.Events.MANIFEST_PARSED, ()=>{ clearTimeout(timer); resolve(); });
-          hls.on(Hls.Events.ERROR, (ev,data)=>{ if(data.fatal && data.details === "manifestLoadError"){ clearTimeout(timer); reject(new Error("فشل تحميل ملف m3u8")); } });
-        });
-
-        await video.play().catch(()=>{});
-      } else {
-        video.src = finalUrl;
-        video.load();
-        await video.play().catch(()=>{});
+      if(!shouldUseWorker(src) && !directFallbackTried){
+        directFallbackTried = true;
+        src._forceWorker = true;
+        toastMsg("تجربة التشغيل عبر Worker...");
+        setTimeout(function(){
+          playServer(currentIndex, true);
+        }, 1000);
+        return;
       }
-    } else {
-      video.src = finalUrl;
-      video.load();
-      await video.play().catch(()=>{});
+
+      showError("فشل التشغيل", e.message || "تعذر تشغيل هذا السيرفر، جرّب سيرفر آخر.");
+    }
+  }
+
+  function fmt(sec){
+    if(!isFinite(sec) || sec < 0) return "00:00";
+
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60).toString().padStart(2, "0");
+    const s = Math.floor(sec % 60).toString().padStart(2, "0");
+
+    return h ? String(h).padStart(2, "0") + ":" + m + ":" + s : m + ":" + s;
+  }
+
+  function updateProgress(){
+    const dur = video.duration;
+    const cur = video.currentTime || 0;
+
+    if(dur && isFinite(dur)){
+      progressPlayed.style.width = ((cur / dur) * 100) + "%";
+      playerTime.textContent = fmt(cur) + " • " + fmt(dur);
+    }else{
+      progressPlayed.style.width = "100%";
+      playerTime.textContent = "LIVE";
+    }
+  }
+
+  video.addEventListener("timeupdate", updateProgress);
+  video.addEventListener("loadedmetadata", updateProgress);
+
+  video.addEventListener("waiting", function(){
+    buffer.style.display = "block";
+  });
+
+  video.addEventListener("playing", function(){
+    buffer.style.display = "none";
+  });
+
+  video.addEventListener("stalled", function(){
+    toastMsg("جاري تحميل البث...");
+  });
+
+  video.addEventListener("ended", function(){
+    toastMsg("انتهى البث أو انقطع المصدر");
+  });
+
+  video.addEventListener("error", function(){
+    if(suppressVideoError) return;
+
+    const src = currentServers[currentIndex] || {};
+
+    if(src && !shouldUseWorker(src) && !directFallbackTried){
+      directFallbackTried = true;
+      src._forceWorker = true;
+      toastMsg("تجربة التشغيل عبر Worker...");
+      setTimeout(function(){
+        playServer(currentIndex, true);
+      }, 1000);
+      return;
     }
 
-    loading.style.display="none";
+    showError("خطأ في الفيديو", "تعذر تشغيل الفيديو، جرّب سيرفر آخر.");
+  });
+
+  progress.onclick = function(e){
+    showPlayerControls();
+
+    const dur = video.duration;
+    if(!dur || !isFinite(dur)) return;
+
+    const rect = progress.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    video.currentTime = Math.max(0, Math.min(dur, ratio * dur));
+  };
+
+  function setPlayIcon(){
+    document.getElementById("playPauseBtn").innerHTML = '<i data-feather="' + (video.paused ? "play" : "pause") + '"></i>';
+    feather.replace();
+  }
+
+  document.getElementById("playPauseBtn").onclick = async function(){
+    showPlayerControls();
+
+    if(video.paused){
+      await video.play().catch(function(){});
+    }else{
+      video.pause();
+    }
+
     setPlayIcon();
-    toastMsg("تم تشغيل السيرفر");
-  }catch(e){
-    loading.style.display="none";
-    autoRetry(e.message || "فشل التشغيل");
-  }
-}
+  };
 
-function autoRetry(reason){
-  retryCount++;
-  toastMsg("جاري إعادة الاتصال بالبث...");
-  setTimeout(()=>playServer(currentIndex, true), Math.min(4000, 900 + (retryCount % 4) * 700));
-}
+  video.addEventListener("play", setPlayIcon);
+  video.addEventListener("pause", setPlayIcon);
 
-function parseClearKey(ckString){
-  if(!ckString) return null;
-  const parts = ckString.split(":");
-  if(parts.length !== 2) return null;
-  return { kid: parts[0].trim().replace(/-/g,"").toLowerCase(), key: parts[1].trim().replace(/-/g,"").toLowerCase() };
-}
+  document.getElementById("rewindBtn").onclick = function(){
+    showPlayerControls();
 
-function fmt(sec){
-  if(!isFinite(sec) || sec < 0) return "00:00";
-  const h = Math.floor(sec/3600);
-  const m = Math.floor((sec%3600)/60).toString().padStart(2,"0");
-  const s = Math.floor(sec%60).toString().padStart(2,"0");
-  return h ? `${String(h).padStart(2,"0")}:${m}:${s}` : `${m}:${s}`;
-}
-function updateProgress(){
-  const dur = video.duration;
-  const cur = video.currentTime || 0;
-  if(dur && isFinite(dur)){
-    progressPlayed.style.width = `${(cur/dur)*100}%`;
-    playerTime.textContent = `${fmt(cur)} • ${fmt(dur)}`;
-  }else{
-    progressPlayed.style.width = "100%";
-    playerTime.textContent = "LIVE";
-  }
-}
-video.addEventListener("timeupdate", updateProgress);
-video.addEventListener("loadedmetadata", updateProgress);
-video.addEventListener("waiting", ()=>buffer.style.display="block");
-video.addEventListener("playing", ()=>buffer.style.display="none");
-video.addEventListener("stalled", ()=>{
-  if(hls){
-    try { hls.startLoad(); } catch(e){}
-  }
-});
-video.addEventListener("ended", ()=>{
-  if(hls){
-    try { hls.startLoad(); video.play().catch(()=>{}); } catch(e){}
-  }
-});
+    if(video.duration && isFinite(video.duration)){
+      video.currentTime = Math.max(0, video.currentTime - 5);
+    }
+  };
 
-video.addEventListener("error", ()=>{
-  if(suppressVideoError) return;
+  document.getElementById("forwardBtn").onclick = function(){
+    showPlayerControls();
 
-  // لا تعرض شاشة توقف بسرعة، حاول ترجع نفس البث أولاً
-  if(hls){
-    try {
-      hls.startLoad(-1);
-      video.play().catch(()=>{});
-      toastMsg("جاري متابعة البث...");
-      return;
-    } catch(e){}
-  }
+    if(video.duration && isFinite(video.duration)){
+      video.currentTime = Math.min(video.duration, video.currentTime + 15);
+    }
+  };
 
-  // إذا كان تشغيل ملف مباشر أو المتصفح هو الذي يشغل HLS، أعد تحميل نفس السيرفر بهدوء
-  if(!softRecovering){
-    softRecovering = true;
-    toastMsg("جاري إعادة الاتصال بالبث...");
-    setTimeout(()=>{
-      softRecovering = false;
-      playServer(currentIndex, true);
-    }, 1200);
-    return;
-  }
+  document.getElementById("muteBtn").onclick = function(){
+    showPlayerControls();
 
-  toastMsg("البث يحاول الاستمرار...");
-});
+    video.muted = !video.muted;
+    document.getElementById("muteBtn").innerHTML = '<i data-feather="' + (video.muted ? "volume-x" : "volume-2") + '"></i>';
+    feather.replace();
+  };
 
-progress.onclick = e => {
-  const dur = video.duration;
-  if(!dur || !isFinite(dur)) return;
-  const rect = progress.getBoundingClientRect();
-  const ratio = (e.clientX - rect.left) / rect.width;
-  video.currentTime = Math.max(0, Math.min(dur, ratio * dur));
-};
+  document.getElementById("fitBtn").onclick = function(){
+    showPlayerControls();
 
-function setPlayIcon(){
-  document.getElementById("playPauseBtn").innerHTML = `<i data-feather="${video.paused ? "play" : "pause"}"></i>`;
-  feather.replace();
-}
-document.getElementById("playPauseBtn").onclick = async () => {
-  showPlayerControls();
-  if(video.paused) await video.play().catch(()=>{});
-  else video.pause();
-  setPlayIcon();
-};
-video.addEventListener("play", setPlayIcon);
-video.addEventListener("pause", setPlayIcon);
+    fitIndex = (fitIndex + 1) % fitModes.length;
+    video.classList.remove("fit-contain", "fit-cover", "fit-fill");
+    video.classList.add(fitModes[fitIndex].cls);
 
-document.getElementById("rewindBtn").onclick = () => {
-  showPlayerControls();
-  if(video.duration && isFinite(video.duration)) video.currentTime = Math.max(0, video.currentTime - 5);
-};
-document.getElementById("forwardBtn").onclick = () => {
-  showPlayerControls();
-  if(video.duration && isFinite(video.duration)) video.currentTime = Math.min(video.duration, video.currentTime + 15);
-};
-document.getElementById("muteBtn").onclick = () => {
-  showPlayerControls();
-  video.muted = !video.muted;
-  document.getElementById("muteBtn").innerHTML = `<i data-feather="${video.muted ? "volume-x" : "volume-2"}"></i>`;
-  feather.replace();
-};
+    document.getElementById("fitBtn").innerHTML = '<i data-feather="' + fitModes[fitIndex].icon + '"></i>';
+    feather.replace();
 
-document.getElementById("fitBtn").onclick = () => {
-  showPlayerControls();
-  fitIndex = (fitIndex + 1) % fitModes.length;
-  video.classList.remove("fit-contain","fit-cover","fit-fill");
-  video.classList.add(fitModes[fitIndex].cls);
-  document.getElementById("fitBtn").innerHTML = `<i data-feather="${fitModes[fitIndex].icon}"></i>`;
-  feather.replace();
-  toastMsg("العرض: " + fitModes[fitIndex].label);
-};
+    toastMsg("العرض: " + fitModes[fitIndex].label);
+  };
 
-document.getElementById("rotateBtn").onclick = () => {
-  showPlayerControls();
-  rotated = !rotated;
-  video.style.transform = rotated ? "rotate(90deg) scale(1.02)" : "";
-  video.style.transformOrigin = "center center";
-  toastMsg(rotated ? "تم تفعيل التدوير" : "تم إيقاف التدوير");
-};
+  document.getElementById("rotateBtn").onclick = function(){
+    showPlayerControls();
 
-document.getElementById("retryBtn").onclick = () => { retryCount = 0; playServer(currentIndex); };
+    rotated = !rotated;
+    video.style.transform = rotated ? "rotate(90deg) scale(1.02)" : "";
+    video.style.transformOrigin = "center center";
+    toastMsg(rotated ? "تم تفعيل التدوير" : "تم إيقاف التدوير");
+  };
 
-</script>
+  document.getElementById("retryBtn").onclick = function(){
+    directFallbackTried = false;
+    const s = currentServers[currentIndex];
+    if(s) s._forceWorker = false;
+    playServer(currentIndex, false);
+  };
 
-<script>
-/* حماية إضافية - ليست 100% لأن HTML يظهر بالمتصفح، لكنها تصعب النسخ والسرقة */
-(function(){
-  const allowedHosts = [
-    "localhost",
-    "127.0.0.1",
-    "frsin-araq.web.app",
-    "frsin-araq.firebaseapp.com",
-    "ali-albasri.github.io",
-    location.hostname
-  ];
-
-  const host = location.hostname;
-  if (!allowedHosts.includes(host)) {
-    document.body.innerHTML = `
-      <div style="height:100vh;background:#050914;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Tajawal,Tahoma">
-        <div>
-          <h2>🚫 غير مسموح</h2>
-          <p>هذا الكود محمي ولا يعمل خارج الموقع الرسمي.</p>
-        </div>
-      </div>`;
-    throw new Error("Blocked domain");
-  }
-
-  document.addEventListener("contextmenu", e => e.preventDefault(), true);
-  document.addEventListener("selectstart", e => e.preventDefault(), true);
-  document.addEventListener("copy", e => e.preventDefault(), true);
-  document.addEventListener("cut", e => e.preventDefault(), true);
-  document.addEventListener("dragstart", e => e.preventDefault(), true);
+  document.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+  });
 
   document.addEventListener("keydown", function(e){
     const k = (e.key || "").toLowerCase();
 
-    if (
+    if(
       e.key === "F12" ||
       (e.ctrlKey && k === "u") ||
-      (e.ctrlKey && k === "s") ||
-      (e.ctrlKey && k === "p") ||
-      (e.ctrlKey && k === "c") ||
-      (e.ctrlKey && k === "a") ||
-      (e.ctrlKey && e.shiftKey && ["i","j","c","k"].includes(k)) ||
-      (e.metaKey && ["u","s","p","c","a"].includes(k))
-    ) {
+      (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(k))
+    ){
       e.preventDefault();
-      e.stopPropagation();
       return false;
     }
-  }, true);
-
-  if (window.top !== window.self) {
-    try { window.top.location = window.self.location.href; } catch(e) {}
-  }
-
-  let devOpen = false;
-  setInterval(function(){
-    const start = performance.now();
-    debugger;
-    const end = performance.now();
-    if (end - start > 120 && !devOpen) {
-      devOpen = true;
-      document.body.innerHTML = `
-        <div style="height:100vh;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Tajawal,Tahoma">
-          <div>
-            <h2>تم إيقاف الصفحة للحماية</h2>
-            <p>يرجى إغلاق أدوات المطور وإعادة تحميل الصفحة.</p>
-          </div>
-        </div>`;
-    }
-  }, 2500);
-})();
+  });
+});
 </script>
-
 </body>
 </html>
