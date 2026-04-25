@@ -4,6 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+
+<script>
+(function(){
+  "use strict";
+  /* حماية تشغيل القالب على موقع البصري فقط */
+  var allowedHosts = [
+    "albasri-tv.github.io"
+  ];
+  var allowedPath = "/basri.html";
+  function deny(){
+    try{document.documentElement.innerHTML='';}catch(e){}
+    document.open();
+    document.write('<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Access Denied</title><style>body{margin:0;background:#0b1220;color:#fff;font-family:Tahoma,Arial;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px}.box{max-width:440px;background:#111827;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:28px;box-shadow:0 20px 50px rgba(0,0,0,.35)}h2{margin:0 0 10px;color:#ef4444}p{color:#cbd5e1;line-height:1.8}</style></head><body><div class="box"><h2>تم منع التشغيل</h2><p>هذا القالب محمي ولا يعمل إلا داخل موقع البصري الرسمي.</p></div></body></html>');
+    document.close();
+    throw new Error("Protected template: unauthorized host");
+  }
+  var host = String(location.hostname || "").toLowerCase();
+  var path = String(location.pathname || "/");
+  var okHost = allowedHosts.indexOf(host) !== -1;
+  var okPath = (path === allowedPath || path === allowedPath + "/" || path === "/" || path.endsWith("/basri.html"));
+  var isLocalPreview = host === "localhost" || host === "127.0.0.1" || host === "";
+  if(!isLocalPreview && (!okHost || !okPath)) deny();
+  Object.defineProperty(window, "__BSR_ALLOWED_SITE__", {value:true, writable:false, configurable:false});
+})();
+</script>
+
 <title>البصري تيفي للبث المباشر </title>
 
 <meta name="description" content="مشاهدة مباريات اليوم بث مباشر بدون تقطيع، بث مباشر القنوات الرياضية HD، جدول مباريات اليوم، متابعة جميع الدوريات العالمية بجودة عالية.">
@@ -661,6 +687,7 @@ video.fit-fill{object-fit:fill!important}
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
+  if(window.__BSR_ALLOWED_SITE__ !== true){ document.body.innerHTML = ""; return; }
   feather.replace();
 
   const firebaseConfig = {
