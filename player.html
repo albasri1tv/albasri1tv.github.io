@@ -50,11 +50,9 @@ video.fit-fill{object-fit:fill!important}
 #toast{position:absolute;bottom:112px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.65);color:#fff;padding:7px 13px;border-radius:999px;display:none;z-index:100}
 </style>
 </head>
-
 <body>
 <div id="player-root">
 <div class="player-wrapper" id="wrap">
-
 <video id="video" playsinline autoplay></video>
 
 <div class="top" id="top">
@@ -98,7 +96,6 @@ video.fit-fill{object-fit:fill!important}
 
 <div class="menu" id="qMenu"></div>
 <div id="toast"></div>
-
 </div>
 </div>
 
@@ -106,52 +103,24 @@ video.fit-fill{object-fit:fill!important}
 document.addEventListener("DOMContentLoaded", () => {
   feather.replace();
 
-  const video = document.getElementById("video");
-  const topBar = document.getElementById("top");
-  const bottom = document.getElementById("bottom");
-  const center = document.getElementById("center");
-  const loading = document.getElementById("loading");
-  const buffer = document.getElementById("buffer");
-  const error = document.getElementById("error");
-  const errTitle = document.getElementById("errTitle");
-  const errMsg = document.getElementById("errMsg");
-  const titleEl = document.getElementById("title");
-  const playBtn = document.getElementById("play");
-  const muteBtn = document.getElementById("mute");
-  const fitBtn = document.getElementById("fit");
-  const rotateBtn = document.getElementById("rotate");
-  const qualityBtn = document.getElementById("quality");
-  const qMenu = document.getElementById("qMenu");
-  const progress = document.getElementById("progress");
-  const played = document.getElementById("played");
-  const thumb = document.getElementById("thumb");
-  const time = document.getElementById("time");
-  const live = document.getElementById("live");
-  const toast = document.getElementById("toast");
+  const $ = id => document.getElementById(id);
+  const video = $("video"), topBar = $("top"), bottom = $("bottom"), center = $("center");
+  const loading = $("loading"), buffer = $("buffer"), error = $("error");
+  const errTitle = $("errTitle"), errMsg = $("errMsg"), titleEl = $("title");
+  const playBtn = $("play"), muteBtn = $("mute"), fitBtn = $("fit"), rotateBtn = $("rotate");
+  const qualityBtn = $("quality"), qMenu = $("qMenu"), progress = $("progress");
+  const played = $("played"), thumb = $("thumb"), time = $("time"), live = $("live"), toast = $("toast");
 
   const WORKER = "https://ali.albesriali8.workers.dev/";
+  let hls = null, shakaPlayer = null, hideTimer = null, fitIndex = 0, rotated = false;
 
-  let hls = null;
-  let shakaPlayer = null;
-  let hideTimer = null;
-  let fitIndex = 0;
-  let rotated = false;
-  let currentUrl = "";
-
-  function getParams(){
+  function params(){
     const p = new URLSearchParams(location.search);
-    const get = k => {
-      let v = p.get(k) || "";
-      try { v = decodeURIComponent(v); } catch(e){}
-      return v;
-    };
+    const get = k => { let v = p.get(k)||""; try{v=decodeURIComponent(v)}catch(e){} return v; };
     return {
-      url: get("url"),
-      title: get("title") || "BSR Player",
-      ck: get("ck"),
-      ref: get("ref"),
-      origin: get("origin"),
-      ua: get("ua") || "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+      url:get("url"), title:get("title")||"BSR Player", ck:get("ck"),
+      ref:get("ref"), origin:get("origin"),
+      ua:get("ua")||"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
     };
   }
 
@@ -160,13 +129,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if(u.startsWith(WORKER)) return u;
 
     const x = u.toLowerCase();
+
+    // MPD لا يمر عبر Worker
+    if (x.includes(".mpd")) return u;
+
     const mustProxy =
       x.startsWith("http://") ||
       x.includes("ostora.pages.dev") ||
       x.includes(".png") ||
       x.includes(".json") ||
-      x.includes(".m3u8") ||
-      x.includes(".mpd");
+      x.includes(".m3u8");
 
     if(!mustProxy) return u;
 
@@ -178,217 +150,154 @@ document.addEventListener("DOMContentLoaded", () => {
       const site = new URL(u.replace("#hls",""));
       p.set("ref", ref || site.origin + "/");
       p.set("origin", origin || site.origin);
-    }catch(e){
-      if(ref) p.set("ref", ref);
-      if(origin) p.set("origin", origin);
-    }
+    }catch(e){}
 
     return WORKER + "?" + p.toString();
   }
 
-  function isMpd(u){
-    return (u || "").toLowerCase().includes(".mpd");
-  }
+  const isMpd = u => (u||"").toLowerCase().includes(".mpd");
 
   function showControls(){
-    topBar.classList.add("visible");
-    bottom.classList.add("visible");
-    center.classList.add("visible");
+    topBar.classList.add("visible"); bottom.classList.add("visible"); center.classList.add("visible");
     clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => {
-      topBar.classList.remove("visible");
-      bottom.classList.remove("visible");
-      center.classList.remove("visible");
-      qMenu.classList.remove("visible");
-    }, 2800);
+    hideTimer = setTimeout(()=>{topBar.classList.remove("visible");bottom.classList.remove("visible");center.classList.remove("visible");qMenu.classList.remove("visible")},2800);
   }
 
-  function showError(t,m){
-    loading.style.display = "none";
-    buffer.style.display = "none";
-    errTitle.textContent = t;
-    errMsg.textContent = m;
-    error.style.display = "flex";
-    feather.replace();
-  }
-
-  function hideError(){
-    error.style.display = "none";
-  }
-
-  function flash(t){
-    toast.textContent = t;
-    toast.style.display = "block";
-    setTimeout(()=>toast.style.display="none",1200);
-  }
-
-  function setPlayIcon(){
-    playBtn.innerHTML = `<i data-feather="${video.paused ? "play" : "pause"}"></i>`;
-    feather.replace();
-  }
-
-  function setMuteIcon(){
-    muteBtn.innerHTML = `<i data-feather="${video.muted ? "volume-x" : "volume-2"}"></i>`;
-    feather.replace();
-  }
-
-  function fmt(s){
-    if(!isFinite(s) || s < 0) return "00:00";
-    const sec = Math.floor(s % 60).toString().padStart(2,"0");
-    const min = Math.floor((s / 60) % 60).toString().padStart(2,"0");
-    const hr = Math.floor(s / 3600);
-    return hr > 0 ? `${hr}:${min}:${sec}` : `${min}:${sec}`;
-  }
-
+  function showError(t,m){loading.style.display="none";buffer.style.display="none";errTitle.textContent=t;errMsg.textContent=m;error.style.display="flex";feather.replace()}
+  function hideError(){error.style.display="none"}
+  function flash(t){toast.textContent=t;toast.style.display="block";setTimeout(()=>toast.style.display="none",1200)}
+  function setPlay(){playBtn.innerHTML=`<i data-feather="${video.paused?"play":"pause"}"></i>`;feather.replace()}
+  function setMute(){muteBtn.innerHTML=`<i data-feather="${video.muted?"volume-x":"volume-2"}"></i>`;feather.replace()}
+  function fmt(s){if(!isFinite(s)||s<0)return"00:00";const sec=Math.floor(s%60).toString().padStart(2,"0"),min=Math.floor((s/60)%60).toString().padStart(2,"0"),hr=Math.floor(s/3600);return hr>0?`${hr}:${min}:${sec}`:`${min}:${sec}`}
   function updateProgress(){
-    const d = video.duration || 0;
-    const c = video.currentTime || 0;
-
-    if(d > 0 && isFinite(d)){
-      const r = (c / d) * 100;
-      played.style.width = r + "%";
-      thumb.style.left = r + "%";
-      time.style.display = "block";
-      live.style.display = "none";
-      time.textContent = `${fmt(c)} • ${fmt(d)}`;
-    } else {
-      played.style.width = "100%";
-      thumb.style.left = "100%";
-      time.style.display = "none";
-      live.style.display = "flex";
-    }
+    const d=video.duration||0,c=video.currentTime||0;
+    if(d>0&&isFinite(d)){const r=(c/d)*100;played.style.width=r+"%";thumb.style.left=r+"%";time.style.display="block";live.style.display="none";time.textContent=`${fmt(c)} • ${fmt(d)}`}
+    else{played.style.width="100%";thumb.style.left="100%";time.style.display="none";live.style.display="flex"}
   }
 
-  function parseClearKey(ck){
-    if(!ck || !ck.includes(":")) return null;
-    const [kid,key] = ck.split(":");
-    const k1 = kid.trim().replace(/-/g,"").toLowerCase();
-    const k2 = key.trim().replace(/-/g,"").toLowerCase();
-    if(!/^[0-9a-f]+$/.test(k1) || !/^[0-9a-f]+$/.test(k2)) return null;
+  function parseCK(ck){
+    if(!ck||!ck.includes(":")) return null;
+    const [kid,key]=ck.split(":");
+    const k1=kid.trim().replace(/-/g,"").toLowerCase(), k2=key.trim().replace(/-/g,"").toLowerCase();
+    if(!/^[0-9a-f]+$/.test(k1)||!/^[0-9a-f]+$/.test(k2)) return null;
     return {kid:k1,key:k2};
   }
 
-  async function destroyPlayers(){
-    if(hls){ hls.destroy(); hls = null; }
-    if(shakaPlayer){ await shakaPlayer.destroy().catch(()=>{}); shakaPlayer = null; }
-    video.removeAttribute("src");
-    video.load();
+  async function destroyAll(){
+    if(hls){hls.destroy();hls=null}
+    if(shakaPlayer){await shakaPlayer.destroy().catch(()=>{});shakaPlayer=null}
+    video.removeAttribute("src"); video.load();
+  }
+
+  function buildHlsQ(){
+    if(!hls){qMenu.innerHTML="";return}
+    let html=`<button class="active" data-level="-1">تلقائي Auto</button>`;
+    (hls.levels||[]).forEach((l,i)=> html+=`<button data-level="${i}">${l.height?l.height+"p":"Quality "+(i+1)}</button>`);
+    qMenu.innerHTML=html;
+    qMenu.querySelectorAll("button").forEach(b=>b.onclick=e=>{
+      e.stopPropagation();
+      hls.currentLevel=parseInt(b.dataset.level,10);
+      qMenu.querySelectorAll("button").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active"); flash("الجودة: "+b.textContent); qMenu.classList.remove("visible"); showControls();
+    });
+  }
+
+  function buildShakaQ(){
+    if(!shakaPlayer){qMenu.innerHTML="";return}
+    const tracks=shakaPlayer.getVariantTracks().filter(t=>t.height).sort((a,b)=>(b.height||0)-(a.height||0));
+    const seen=new Set(), unique=[];
+    tracks.forEach(t=>{if(!seen.has(t.height)){seen.add(t.height);unique.push(t)}});
+
+    let html=`<button class="active" data-id="auto">تلقائي Auto</button>`;
+    unique.forEach(t=> html+=`<button data-id="${t.id}">${t.height}p</button>`);
+    qMenu.innerHTML=html;
+
+    qMenu.querySelectorAll("button").forEach(b=>b.onclick=e=>{
+      e.stopPropagation();
+      if(b.dataset.id==="auto") shakaPlayer.configure({abr:{enabled:true}});
+      else{
+        shakaPlayer.configure({abr:{enabled:false}});
+        const tr=tracks.find(x=>String(x.id)===b.dataset.id);
+        if(tr) shakaPlayer.selectVariantTrack(tr,true);
+      }
+      qMenu.querySelectorAll("button").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active"); flash("الجودة: "+b.textContent); qMenu.classList.remove("visible"); showControls();
+    });
   }
 
   async function playStream(){
-    const params = getParams();
-    if(!params.url){
-      showError("لا يوجد رابط", "افتح المشغل هكذا: player.html?url=رابط_القناة");
-      return;
-    }
+    const p=params();
+    if(!p.url) return showError("لا يوجد رابط","افتح المشغل هكذا: player.html?url=رابط_القناة");
 
-    titleEl.textContent = params.title;
-    hideError();
-    loading.style.display = "block";
-    buffer.style.display = "none";
-
-    const finalUrl = proxyUrl(params.url, params.ref, params.origin, params.ua);
-    currentUrl = finalUrl;
+    titleEl.textContent=p.title;
+    hideError(); loading.style.display="block"; buffer.style.display="none";
 
     try{
-      await destroyPlayers();
+      await destroyAll();
 
-      if(isMpd(params.url)){
+      if(isMpd(p.url)){
         shaka.polyfill.installAll();
+        if(!shaka.Player.isBrowserSupported()) return showError("غير مدعوم","المتصفح لا يدعم MPD");
 
-        if(!shaka.Player.isBrowserSupported()){
-          showError("غير مدعوم", "المتصفح لا يدعم تشغيل DASH/MPD");
-          return;
-        }
+        shakaPlayer=new shaka.Player(video);
 
-        shakaPlayer = new shaka.Player(video);
-
-        shakaPlayer.addEventListener("error", e => {
-          const msg = e.detail?.message || JSON.stringify(e.detail) || "خطأ غير معروف";
-          showError("خطأ MPD", msg);
+        shakaPlayer.addEventListener("error", e=>{
+          showError("خطأ MPD", e.detail?.message || JSON.stringify(e.detail) || "تعذر التشغيل");
         });
 
-        const net = shakaPlayer.getNetworkingEngine();
+        const net=shakaPlayer.getNetworkingEngine();
         if(net){
-          net.registerRequestFilter((type, request) => {
-            if(params.ua) request.headers["User-Agent"] = params.ua;
-            if(params.ref) request.headers["Referer"] = params.ref;
-            if(params.origin) request.headers["Origin"] = params.origin;
+          net.registerRequestFilter((type, req)=>{
+            if(p.ua) req.headers["User-Agent"]=p.ua;
+            if(p.ref) req.headers["Referer"]=p.ref;
+            if(p.origin) req.headers["Origin"]=p.origin;
           });
         }
 
-        const ck = parseClearKey(params.ck);
+        const ck=parseCK(p.ck);
         if(ck){
           shakaPlayer.configure({
-            drm: {
-              clearKeys: {
-                [ck.kid]: ck.key
-              }
-            }
+            drm:{ clearKeys:{ [ck.kid]: ck.key } }
           });
         }
 
-        shakaPlayer.addEventListener("buffering", e => {
-          buffer.style.display = e.buffering ? "block" : "none";
-        });
+        shakaPlayer.addEventListener("buffering", e=> buffer.style.display=e.buffering?"block":"none");
 
-        await shakaPlayer.load(finalUrl);
+        await shakaPlayer.load(p.url);
 
-        loading.style.display = "none";
+        loading.style.display="none";
         await video.play().catch(()=>{});
-        setPlayIcon();
-        setMuteIcon();
-        buildShakaQuality();
-        showControls();
+        setPlay(); setMute(); buildShakaQ(); showControls();
 
       } else {
+        const finalUrl=proxyUrl(p.url,p.ref,p.origin,p.ua);
+
         if(Hls.isSupported()){
-          hls = new Hls({
-            enableWorker:true,
-            lowLatencyMode:false,
-            maxBufferLength:30,
-            backBufferLength:90,
-            liveSyncDuration:4
+          hls=new Hls({
+            enableWorker:true, lowLatencyMode:false, maxBufferLength:30, backBufferLength:90, liveSyncDuration:4
           });
 
           hls.loadSource(finalUrl);
           hls.attachMedia(video);
 
-          hls.on(Hls.Events.MANIFEST_PARSED, async () => {
-            loading.style.display = "none";
-            buildHlsQuality();
+          hls.on(Hls.Events.MANIFEST_PARSED, async ()=>{
+            loading.style.display="none";
+            buildHlsQ();
             await video.play().catch(()=>{});
-            setPlayIcon();
-            setMuteIcon();
-            showControls();
+            setPlay(); setMute(); showControls();
           });
 
-          hls.on(Hls.Events.ERROR, (event, data) => {
-            console.log("HLS ERROR", data);
+          hls.on(Hls.Events.ERROR,(event,data)=>{
             if(data.fatal){
-              if(data.type === Hls.ErrorTypes.NETWORK_ERROR){
-                hls.startLoad();
-                flash("إعادة الاتصال");
-              } else if(data.type === Hls.ErrorTypes.MEDIA_ERROR){
-                hls.recoverMediaError();
-                flash("إصلاح الفيديو");
-              } else {
-                showError("خطأ HLS", data.details || "تعذر تشغيل الرابط");
-              }
+              if(data.type===Hls.ErrorTypes.NETWORK_ERROR){hls.startLoad();flash("إعادة الاتصال")}
+              else if(data.type===Hls.ErrorTypes.MEDIA_ERROR){hls.recoverMediaError();flash("إصلاح الفيديو")}
+              else showError("خطأ HLS", data.details || "تعذر تشغيل الرابط");
             }
           });
 
-        } else if(video.canPlayType("application/vnd.apple.mpegurl")){
-          video.src = finalUrl;
-          video.addEventListener("loadedmetadata", async () => {
-            loading.style.display = "none";
-            await video.play().catch(()=>{});
-            setPlayIcon();
-            showControls();
-          }, {once:true});
         } else {
-          video.src = finalUrl;
-          loading.style.display = "none";
+          video.src=finalUrl;
+          loading.style.display="none";
           await video.play().catch(()=>{});
         }
       }
@@ -398,151 +307,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function buildHlsQuality(){
-    if(!hls){ qMenu.innerHTML=""; return; }
-    let html = `<button class="active" data-level="-1">تلقائي Auto</button>`;
-    (hls.levels || []).forEach((l,i)=>{
-      html += `<button data-level="${i}">${l.height ? l.height+"p" : "Quality "+(i+1)}</button>`;
-    });
-    qMenu.innerHTML = html;
-    qMenu.querySelectorAll("button").forEach(b=>{
-      b.onclick = e => {
-        e.stopPropagation();
-        hls.currentLevel = parseInt(b.dataset.level,10);
-        qMenu.querySelectorAll("button").forEach(x=>x.classList.remove("active"));
-        b.classList.add("active");
-        flash("الجودة: " + b.textContent);
-        qMenu.classList.remove("visible");
-        showControls();
-      };
-    });
-  }
-
-  function buildShakaQuality(){
-    if(!shakaPlayer){ qMenu.innerHTML=""; return; }
-
-    const tracks = shakaPlayer.getVariantTracks()
-      .filter(t=>t.height)
-      .sort((a,b)=>(b.height||0)-(a.height||0));
-
-    const seen = new Set();
-    const unique = [];
-    tracks.forEach(t=>{
-      if(!seen.has(t.height)){
-        seen.add(t.height);
-        unique.push(t);
-      }
-    });
-
-    let html = `<button class="active" data-id="auto">تلقائي Auto</button>`;
-    unique.forEach(t=>{
-      html += `<button data-id="${t.id}">${t.height}p</button>`;
-    });
-
-    qMenu.innerHTML = html;
-
-    qMenu.querySelectorAll("button").forEach(b=>{
-      b.onclick = e => {
-        e.stopPropagation();
-
-        if(b.dataset.id === "auto"){
-          shakaPlayer.configure({abr:{enabled:true}});
-        } else {
-          shakaPlayer.configure({abr:{enabled:false}});
-          const tr = tracks.find(x=>String(x.id) === b.dataset.id);
-          if(tr) shakaPlayer.selectVariantTrack(tr, true);
-        }
-
-        qMenu.querySelectorAll("button").forEach(x=>x.classList.remove("active"));
-        b.classList.add("active");
-        flash("الجودة: " + b.textContent);
-        qMenu.classList.remove("visible");
-        showControls();
-      };
-    });
-  }
-
-  playBtn.onclick = async e => {
-    e.stopPropagation();
-    if(video.paused) await video.play().catch(()=>{});
-    else video.pause();
-    setPlayIcon();
-    showControls();
-  };
-
-  document.getElementById("rew").onclick = e => {
-    e.stopPropagation();
-    if(isFinite(video.duration)) video.currentTime = Math.max(0, video.currentTime - 5);
-    showControls();
-  };
-
-  document.getElementById("fwd").onclick = e => {
-    e.stopPropagation();
-    if(isFinite(video.duration)) video.currentTime = Math.min(video.duration, video.currentTime + 15);
-    showControls();
-  };
-
-  muteBtn.onclick = e => {
-    e.stopPropagation();
-    video.muted = !video.muted;
-    setMuteIcon();
-    flash(video.muted ? "الصوت: كتم" : "الصوت: تشغيل");
-    showControls();
-  };
-
-  fitBtn.onclick = e => {
-    e.stopPropagation();
-    const modes = ["fit-fill","fit-contain","fit-cover"];
-    const names = ["تمدد","ملاءمة","قص"];
-    video.classList.remove(...modes);
-    fitIndex = (fitIndex + 1) % modes.length;
-    video.classList.add(modes[fitIndex]);
-    flash("العرض: " + names[fitIndex]);
-    showControls();
-  };
-
-  rotateBtn.onclick = e => {
-    e.stopPropagation();
-    rotated = !rotated;
-    video.style.transform = rotated ? "rotate(90deg) scale(1.02)" : "";
-    flash(rotated ? "تم تفعيل التدوير" : "تم إيقاف التدوير");
-    showControls();
-  };
-
-  qualityBtn.onclick = e => {
-    e.stopPropagation();
-    if(hls) buildHlsQuality();
-    if(shakaPlayer) buildShakaQuality();
-    qMenu.classList.toggle("visible");
-    showControls();
-  };
-
-  progress.onclick = e => {
-    const d = video.duration || 0;
-    if(!(d > 0 && isFinite(d))) return;
-    const r = progress.getBoundingClientRect();
-    const ratio = (e.clientX - r.left) / r.width;
-    video.currentTime = Math.max(0, Math.min(d, ratio * d));
-    showControls();
-  };
-
-  document.getElementById("retry").onclick = playStream;
-  document.getElementById("back").onclick = () => history.back();
+  $("play").onclick=async e=>{e.stopPropagation(); if(video.paused) await video.play().catch(()=>{}); else video.pause(); setPlay(); showControls()}
+  $("rew").onclick=e=>{e.stopPropagation(); if(isFinite(video.duration)) video.currentTime=Math.max(0,video.currentTime-5); showControls()}
+  $("fwd").onclick=e=>{e.stopPropagation(); if(isFinite(video.duration)) video.currentTime=Math.min(video.duration,video.currentTime+15); showControls()}
+  muteBtn.onclick=e=>{e.stopPropagation(); video.muted=!video.muted; setMute(); flash(video.muted?"الصوت: كتم":"الصوت: تشغيل"); showControls()}
+  fitBtn.onclick=e=>{e.stopPropagation(); const modes=["fit-fill","fit-contain","fit-cover"], names=["تمدد","ملاءمة","قص"]; video.classList.remove(...modes); fitIndex=(fitIndex+1)%modes.length; video.classList.add(modes[fitIndex]); flash("العرض: "+names[fitIndex]); showControls()}
+  rotateBtn.onclick=e=>{e.stopPropagation(); rotated=!rotated; video.style.transform=rotated?"rotate(90deg) scale(1.02)":""; flash(rotated?"تم تفعيل التدوير":"تم إيقاف التدوير"); showControls()}
+  qualityBtn.onclick=e=>{e.stopPropagation(); if(hls) buildHlsQ(); if(shakaPlayer) buildShakaQ(); qMenu.classList.toggle("visible"); showControls()}
+  progress.onclick=e=>{const d=video.duration||0;if(!(d>0&&isFinite(d)))return;const r=progress.getBoundingClientRect();const ratio=(e.clientX-r.left)/r.width;video.currentTime=Math.max(0,Math.min(d,ratio*d));showControls()}
+  $("retry").onclick=playStream;
+  $("back").onclick=()=>history.back();
 
   video.addEventListener("waiting",()=>buffer.style.display="block");
   video.addEventListener("playing",()=>buffer.style.display="none");
-  video.addEventListener("timeupdate", updateProgress);
-  video.addEventListener("loadedmetadata", updateProgress);
-  video.addEventListener("play", setPlayIcon);
-  video.addEventListener("pause", setPlayIcon);
-  document.getElementById("wrap").onclick = showControls;
+  video.addEventListener("timeupdate",updateProgress);
+  video.addEventListener("loadedmetadata",updateProgress);
+  video.addEventListener("play",setPlay);
+  video.addEventListener("pause",setPlay);
+  $("wrap").onclick=showControls;
 
-  video.muted = false;
-  video.volume = 1;
-  setMuteIcon();
-  setPlayIcon();
-  showControls();
-  playStream();
+  video.muted=false; video.volume=1;
+  setMute(); setPlay(); showControls(); playStream();
 });
 </script>
 </body>
