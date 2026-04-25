@@ -86,11 +86,6 @@ watch soccer live hd
 <meta name="language" content="Arabic">
 <meta name="theme-color" content="#0b1220">
 
-<meta property="og:title" content="BSR Live - بث مباشر مباريات اليوم والقنوات الرياضية HD">
-<meta property="og:description" content="تابع مباريات اليوم والقنوات الرياضية بث مباشر بدون تقطيع عبر BSR Live.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="ar_AR">
-<meta name="theme-color" content="#0b1220">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.13/shaka-player.compiled.js"></script>
@@ -426,6 +421,25 @@ video.fit-fill{object-fit:fill!important}
   padding:12px;
   background:linear-gradient(to top, rgba(0,0,0,.82), rgba(0,0,0,0));
 }
+.player-watermark{
+  position:absolute;
+  left:50%;
+  bottom:74px;
+  transform:translateX(-50%);
+  z-index:998;
+  padding:7px 14px;
+  border-radius:999px;
+  background:rgba(0,0,0,.38);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+  text-align:center;
+  white-space:nowrap;
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+}
+@media(max-width:520px){.player-watermark{font-size:12px;bottom:70px;padding:6px 11px}}
 .progress{
   height:5px;
   background:rgba(255,255,255,.22);
@@ -592,6 +606,7 @@ video.fit-fill{object-fit:fill!important}
 <div id="playerRoot">
   <div class="player-wrapper">
     <video id="video" playsinline autoplay></video>
+    <div class="player-watermark">شاهد جميع المباريات على تطبيق البصري TV</div>
 
     <div class="player-top">
       <button class="pbtn" id="playerBackBtn" title="رجوع"><i data-feather="arrow-right"></i></button>
@@ -785,28 +800,40 @@ document.addEventListener("DOMContentLoaded", function(){
     const txt = String(m.status_text || m.statusText || "");
 
     if(txt.includes("انتهت") || s === 4){
-      return {text:"انتهت", cls:"end", order:3, showScore:true};
-    }
-
-    if(txt.includes("جارية") || txt.includes("مباشر") || [1,2,3].includes(s)){
-      return {text:"جارية الآن", cls:"live", order:1, showScore:true};
+      return {text:"انتهت المباراة", cls:"end", order:3, showScore:true};
     }
 
     const d = m.match_date || m.date || "";
     const t = m.match_time || m.time || "";
+    let matchStart = null;
 
     if(d && t){
-      const mt = new Date(d + "T" + toEnglishDigits(t));
-      if(!isNaN(mt.getTime()) && Date.now() >= mt.getTime()){
-        return {text:"جارية الآن", cls:"live", order:1, showScore:true};
-      }
+      const dt = new Date(d + "T" + toEnglishDigits(t));
+      if(!isNaN(dt.getTime())) matchStart = dt;
+    }
+
+    if(matchStart && Date.now() >= matchStart.getTime() + (130 * 60 * 1000)){
+      return {text:"انتهت المباراة", cls:"end", order:3, showScore:true};
+    }
+
+    if(txt.includes("جارية") || txt.includes("مباشر") || [1,2,3].includes(s) || (matchStart && Date.now() >= matchStart.getTime())){
+      return {text:"جارية الآن", cls:"live", order:1, showScore:true};
     }
 
     return {text:"لم تبدأ", cls:"soon", order:2, showScore:false};
   }
 
+  function scoreValue(v){
+    if(v === undefined || v === null) return "0";
+    const str = String(v).trim();
+    if(str === "" || str === "-" || str.toLowerCase() === "null" || str.toLowerCase() === "undefined") return "0";
+    return str;
+  }
+
   function getScore(m){
-    return safe(m.home_scores, safe(m.homeScore, "0")) + " - " + safe(m.away_scores, safe(m.awayScore, "0"));
+    const homeScore = scoreValue(m.home_scores !== undefined ? m.home_scores : m.homeScore);
+    const awayScore = scoreValue(m.away_scores !== undefined ? m.away_scores : m.awayScore);
+    return homeScore + " - " + awayScore;
   }
 
   function renderMatch(m){
@@ -829,8 +856,7 @@ document.addEventListener("DOMContentLoaded", function(){
           '<div class="team-name">' + home + '</div>' +
         '</div>' +
         '<div class="match-time">' +
-          '<div class="result-now">' + getScore(m) + '</div>' +
-          (!status.showScore ? '<div class="match-hour">' + timeText + '</div>' : '') +
+          (status.showScore ? '<div class="result-now">' + getScore(m) + '</div>' : '<div class="match-hour">' + timeText + '</div>') +
           '<div class="match-date ' + status.cls + '">' + status.text + '</div>' +
         '</div>' +
         '<div class="left-team">' +
