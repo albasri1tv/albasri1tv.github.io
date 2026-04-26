@@ -140,9 +140,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function getParams(){const s=decodeServersParam(); if(s?.servers?.[activeServerIndex])return s.servers[activeServerIndex]; return {url:get("url"),title:get("title")||"BSR Player",ck:get("ck"),ref:get("ref"),ua:get("ua")||navigator.userAgent};}
   const isMpd=u=>(u||"").toLowerCase().includes(".mpd");
+  const isMp4=u=>(u||"").toLowerCase().includes(".mp4");
   const isHls=u=>{u=(u||"").toLowerCase();return u.includes(".m3u8")||u.includes(".png")||u.includes("#hls")||u.includes(".json")};
   const proxyUrl=(u,ref,ua)=>{const p=new URLSearchParams();p.set("url",u.replace("#hls",""));p.set("ua",ua||navigator.userAgent);try{const x=new URL(u.replace("#hls",""));p.set("ref",ref||x.origin+"/")}catch{}return WORKER+"?"+p.toString()};
-  const finalUrl=p=>(isMpd(p.url)?p.url:proxyUrl(p.url,p.ref,p.ua));
+  const finalUrl=p=>(isMpd(p.url)||isMp4(p.url)?p.url:proxyUrl(p.url,p.ref,p.ua));
 
   async function forceMobileFullscreen(){
     try{ window.scrollTo(0,1); }catch{}
@@ -150,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try{ wrap.requestFullscreen && !document.fullscreenElement && await wrap.requestFullscreen({navigationUI:"hide"}); }catch{}
     try{ if(screen.orientation?.lock) await screen.orientation.lock("landscape").catch(()=>{}); }catch{}
     try{
-      // iPhone Safari لا يسمح بإخفاء شريط النظام إلا عبر مشغل الفيديو الأصلي بعد ضغطة المستخدم.
       const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       if(isiOS && video.webkitEnterFullscreen && !document.fullscreenElement) video.webkitEnterFullscreen();
     }catch{}
@@ -178,7 +178,18 @@ document.addEventListener("DOMContentLoaded", () => {
   async function playStream(){
     const p=getParams(); if(!p.url){errTitle.textContent="لا يوجد رابط";errMsg.textContent="الرابط غير صالح";errorBox.style.display="flex";return}
     titleEl.textContent=p.title||"BSR Player";errorBox.style.display="none";loading.style.display="block";buffer.style.display="none";
-    try{await destroyPlayers(); const src=finalUrl(p);
+    try{
+      await destroyPlayers();
+      const src=finalUrl(p);
+
+      if(isMp4(p.url)){
+        video.src = src;
+        video.load();
+        loading.style.display="none";
+        await startVideoAfterLoad();
+        return;
+      }
+
       if(isMpd(p.url)){
         shaka.polyfill.installAll(); shakaPlayer=new shaka.Player(video);
         if(p.ck&&p.ck.includes(":")){const [kid,key]=p.ck.split(":");shakaPlayer.configure({drm:{clearKeys:{[kid.trim()]:key.trim()}}})}
