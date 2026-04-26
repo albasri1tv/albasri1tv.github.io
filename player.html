@@ -211,7 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
   $("back").onclick=e=>{e.stopPropagation();history.back()};
   video.addEventListener("waiting",()=>buffer.style.display="block");video.addEventListener("playing",()=>buffer.style.display="none");video.addEventListener("timeupdate",updateProgress);video.addEventListener("loadedmetadata",updateProgress);video.addEventListener("play",setPlayIcon);video.addEventListener("pause",setPlayIcon);
   wrap.onclick=async()=>{
-    await forceMobileFullscreen();
     showControls();
     if(video.paused || tapStart.classList.contains("show")){
       await video.play().catch(async()=>{video.muted=true;await video.play().catch(()=>{})});
