@@ -2,7 +2,7 @@
 <html dir="rtl" lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Exo Style Player</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +16,7 @@
 
   <style>
     :root{
-      --bar-bg: transparent;
+      --bar-bg: rgba(0,0,0,.55);
     }
 
     *{
@@ -52,29 +52,20 @@
     #player-root{
       position:fixed;
       inset:0;
-      width:100vw;
-      height:100vh;
-      height:100dvh;
       background:#000;
-      overflow:hidden;
     }
 
     .player-wrapper{
-      position:fixed;
-      inset:0;
-      width:100vw;
-      height:100vh;
-      height:100dvh;
+      position:relative;
+      width:100%;
+      height:100%;
       background:#000;
       overflow:hidden;
     }
 
     video{
-      position:absolute;
-      inset:0;
-      width:100vw;
-      height:100vh;
-      height:100dvh;
+      width:100%;
+      height:100%;
       background:#000;
       object-fit:fill;
       filter: contrast(1.06) saturate(1.12);
@@ -84,46 +75,6 @@
     video.fit-contain{ object-fit: contain !important; }
     video.fit-cover{ object-fit: cover !important; }
     video.fit-fill{ object-fit: fill !important; }
-
-
-
-    .server-bar{
-      position:absolute;
-      top:16px;
-      left:12px;
-      right:auto;
-      z-index:130;
-      display:none;
-      gap:8px;
-      padding:6px;
-      max-width:min(72vw,760px);
-      overflow-x:auto;
-      direction:ltr;
-      background:transparent;
-      border:0;
-      border-radius:999px;
-      scrollbar-width:none;
-      opacity:0;
-      transition:.25s;
-      pointer-events:auto;
-    }
-    .server-bar::-webkit-scrollbar{display:none}
-    .server-bar.visible{display:flex;opacity:1}
-    .server-bar.hide{opacity:0;pointer-events:none}
-    .server-btn{
-      flex:0 0 auto;
-      border:1px solid rgba(255,255,255,.30);
-      background:transparent;
-      color:#fff;
-      padding:8px 14px;
-      border-radius:999px;
-      font-family:'Tajawal',sans-serif;
-      font-weight:800;
-      cursor:pointer;
-      white-space:nowrap;
-      text-shadow:0 1px 2px #000;
-    }
-    .server-btn.active{background:#fff;color:#000;text-shadow:none}
 
     #loading-spinner{
       position:absolute;
@@ -207,14 +158,14 @@
     .top-bar{
       position:absolute;
       top:0;
+      left:0;
       right:0;
-      left:auto;
       z-index:70;
       display:flex;
       align-items:center;
-      justify-content:flex-start;
-      padding:14px 16px;
-      background:transparent;
+      justify-content:space-between;
+      padding:12px 14px;
+      background:linear-gradient(to bottom, rgba(0,0,0,.78), rgba(0,0,0,0));
       opacity:0;
       transform:translateY(-6px);
       transition:.25s;
@@ -237,8 +188,9 @@
       height:42px;
       border:none;
       border-radius:14px;
-      background:transparent;
-      border:1px solid rgba(255,255,255,.28);
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(14px);
       color:#fff;
       display:flex;
       align-items:center;
@@ -285,8 +237,9 @@
       width:74px;
       height:74px;
       border-radius:999px;
-      background:transparent;
-      border:1px solid rgba(255,255,255,.28);
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(14px);
       color:#fff;
       box-shadow:0 16px 38px rgba(0,0,0,.35);
       display:flex;
@@ -311,8 +264,9 @@
       width:60px;
       height:60px;
       border-radius:999px;
-      background:transparent;
-      border:1px solid rgba(255,255,255,.28);
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(14px);
       color:#fff;
       box-shadow:0 16px 38px rgba(0,0,0,.35);
       display:flex;
@@ -367,7 +321,7 @@
       bottom:0;
       pointer-events:auto;
       padding:12px 14px 14px 14px;
-      background: transparent;
+      background: linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.18), rgba(0,0,0,0));
       opacity:0;
       transform: translateY(6px);
       transition: opacity .22s, transform .22s;
@@ -422,26 +376,19 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      direction:ltr;
-      width:100%;
+      gap:12px;
     }
 
     .icons-row{
       display:flex;
       align-items:center;
-      gap:10px;
-      justify-content:flex-start;
-      direction:rtl;
+      gap:12px;
+      justify-content:flex-end;
+      direction:ltr;
       min-width:0 !important;
-      flex:0 1 auto;
-      flex:0 0 auto;
-      overflow-x:auto;
-      scrollbar-width:none;
+      width:100%;
       flex-wrap:nowrap;
     }
-
-    .icons-row::-webkit-scrollbar{ display:none; }
 
     .time-text{
       color:#fff;
@@ -452,14 +399,14 @@
       text-align:left;
       direction:ltr;
       opacity:.92;
-      flex:0 0 auto;
+      margin-left:auto;
     }
 
     .icon-btn{
       width:40px;
       height:40px;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,.28);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
       border-radius: 12px;
       padding: 0;
       display:flex;
@@ -468,7 +415,7 @@
       cursor:pointer;
       color:#fff;
       opacity:.98;
-      text-shadow:0 1px 2px #000;
+      backdrop-filter: blur(10px);
       transition: .18s ease;
     }
 
@@ -492,8 +439,9 @@
       gap:6px;
       padding:7px 10px;
       border-radius:999px;
-      background:transparent;
-      border:1px solid rgba(255,255,255,.28);
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(14px);
       color:#fff;
       font-weight:800;
       font-size:13px;
@@ -579,7 +527,7 @@
       display:none;
       pointer-events:none;
       z-index:90;
-      text-shadow:0 1px 2px #000;
+      backdrop-filter: blur(10px);
     }
 
     .rotated{
@@ -589,7 +537,7 @@
 
     #pipBtn,
     #fullscreenBtn{
-      display: flex !important;
+      display: none !important;
     }
 
     #castBtn,
@@ -606,8 +554,7 @@
     #muteBtn{ order: 7; }
 
     @media (max-width: 600px){
-      .stream-title{ max-width:36vw; }
-      .server-bar{top:10px;left:10px;right:auto;max-width:58vw}
+      .stream-title{ max-width:50vw; }
       .center-transport{ gap:16px; }
       .circle-btn.big{
         width:68px;
@@ -633,7 +580,6 @@
 
 <div id="player-root">
   <div class="player-wrapper" id="playerWrapper">
-    <div class="server-bar" id="serverBar"></div>
     <video id="video" playsinline autoplay></video>
 
     <div class="top-bar" id="topBar">
@@ -887,7 +833,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const subsMenu       = document.getElementById('subsMenu');
   const audioMenu      = document.getElementById('audioMenu');
   const liveLabel      = document.getElementById('liveLabel');
-  const serverBar      = document.getElementById('serverBar');
 
   const DEFAULT_URL = "https://1s1.app55.com/out/v1/eee188845e9543699fd24e5a9890c6e2/index.mpd";
   const DEFAULT_CK  = "b253c726c24c7c94a3ddf9b1907e2c76:097963d6ad73c3d712a104981de0ed42";
@@ -898,8 +843,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   let availableHeights = [];
   let manualHeight = null;
   let rotated = false;
-  let serverList = [];
-  let activeServerIndex = 0;
 
   let chosenTextLang = null;
   let chosenAudioLang = null;
@@ -940,38 +883,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     applyFitModeByIndex(fitModeIndex + 1);
   }
 
-  function decodeServersParam(){
-    const p = new URLSearchParams(window.location.search);
-    let raw = p.get('servers');
-    if(!raw) return null;
-    try{return JSON.parse(decodeURIComponent(escape(atob(raw))))}catch(e){return null}
-  }
-
-  function buildServerButtons(){
-    const data = decodeServersParam();
-    if(!data || !Array.isArray(data.servers) || !data.servers.length) return;
-    serverList = data.servers;
-    serverBar.innerHTML = serverList.map((srv,i)=>`<button class="server-btn ${i===0?'active':''}" data-index="${i}">${srv.name||'Server '+(i+1)}</button>`).join('');
-    serverBar.classList.add('visible');
-    serverBar.querySelectorAll('.server-btn').forEach(btn=>{
-      btn.addEventListener('click', async (e)=>{
-        e.stopPropagation();
-        activeServerIndex = +btn.dataset.index;
-        serverBar.querySelectorAll('.server-btn').forEach(x=>x.classList.remove('active'));
-        btn.classList.add('active');
-        await reloadStream();
-        showControls();
-      });
-    });
-  }
-
   function getParams(){
-    const multi = decodeServersParam();
-    if(multi?.servers?.[activeServerIndex]){
-      const s = multi.servers[activeServerIndex];
-      return { url:s.url || DEFAULT_URL, ck:s.ck || DEFAULT_CK, title:s.name || DEFAULT_TITLE, sub:s.sub || null, tlang:s.tlang || null, alang:s.alang || null, fit:s.fit || null, ref:s.ref || null, ua:s.ua || null, auth:s.auth || null, origin:s.origin || null, cookie:s.cookie || null };
-    }
-
     const p = new URLSearchParams(window.location.search);
 
     let url = p.get('url');
@@ -1062,7 +974,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     bottomBar.classList.add('visible');
     centerTransport.classList.add('visible');
     topBar.classList.add('visible');
-    serverBar.classList.remove('hide');
 
     clearTimeout(hideTimeout);
     hideTimeout = setTimeout(()=>{
@@ -1072,7 +983,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       qualityMenu.classList.remove('visible');
       subsMenu.classList.remove('visible');
       audioMenu.classList.remove('visible');
-      serverBar.classList.add('hide');
     }, 2800);
   }
 
@@ -1672,7 +1582,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateFullscreenIcon();
   updateProgress();
   loadFitMode();
-  buildServerButtons();
   showControls();
   initPlayer();
 });
