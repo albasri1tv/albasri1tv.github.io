@@ -3,7 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مسلسلات وأفلام البصري تيفي </title>
+    <!-- حماية تشغيل الصفحة على موقع البصري فقط -->
+    <script>
+    (function(){
+        'use strict';
+        const ALLOWED_HOSTS = ['albasri-tv.github.io'];
+        const ALLOWED_PATHS = ['/albasti4u.html', '/albasti4u', '/albasri_series_domain_protected.html'];
+        function blockPage(){
+            document.addEventListener('DOMContentLoaded', function(){
+                document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0f13;color:#fff;font-family:Cairo,Arial;text-align:center;padding:20px;direction:rtl"><div style="max-width:420px;background:#1c1c21;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.4)"><div style="font-size:46px;color:#ff0040;margin-bottom:10px">⛔</div><h2 style="margin:0 0 10px;color:#ff0040">تشغيل غير مصرح</h2><p style="margin:0;color:#ccc;line-height:1.8">هذا الكود محمي ويعمل فقط على موقع البصري الرسمي.</p></div></div>';
+            });
+            throw new Error('Protected page: unauthorized domain');
+        }
+        const host = location.hostname.toLowerCase();
+        const path = location.pathname;
+        const isLocal = host === 'localhost' || host === '127.0.0.1' || location.protocol === 'file:';
+        const allowedHost = ALLOWED_HOSTS.includes(host);
+        const allowedPath = ALLOWED_PATHS.includes(path);
+        if (!isLocal && (!allowedHost || !allowedPath)) blockPage();
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('selectstart', e => { if (!['INPUT','TEXTAREA'].includes(e.target.tagName)) e.preventDefault(); });
+        document.addEventListener('dragstart', e => e.preventDefault());
+        document.addEventListener('keydown', function(e){
+            const k = String(e.key || '').toLowerCase();
+            if (e.key === 'F12' || (e.ctrlKey && ['u','s','p','c','x'].includes(k)) || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k))) {
+                e.preventDefault(); e.stopPropagation(); return false;
+            }
+        }, true);
+    })();
+    </script>
+    <title>  البصري تيفي مسلسلات وأفلام   </title>
     <link rel="icon" type="image/jpg" href="https://up6.cc/2026/04/177672181699171.jpg">
 
 <meta name="description" content="البصري تي في منصة لمشاهدة أحدث المسلسلات والأفلام العربية والتركية والأجنبية والهندية والآسيوية بجودة عالية، مع تحديث يومي ومكتبة ضخمة لعشاق الدراما والسينما.">
@@ -36,6 +65,8 @@ Albasri series, Albasri movies, Arabic series, Turkish series, Netflix series, o
         :root[data-theme="dark"] { --main: #ff0040; --bg: #0f0f13; --card: #1c1c21; --text: #ffffff; --text-muted: #a0a0a0; --border: rgba(255, 255, 255, 0.05); --header-bg: rgba(15, 15, 19, 0.85); --shadow: rgba(0, 0, 0, 0.5); }
         :root[data-theme="light"] { --main: #e60039; --bg: #f4f4f9; --card: #ffffff; --text: #1a1a1a; --text-muted: #555555; --border: rgba(0, 0, 0, 0.1); --header-bg: rgba(255, 255, 255, 0.9); --shadow: rgba(0, 0, 0, 0.1); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, .custom-card, .sidebar, header { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+        input, textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s, color 0.3s; overflow-x: hidden; }
         header { background: var(--header-bg); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); box-shadow: 0 4px 20px var(--shadow); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .logo-area { display: flex; align-items: center; gap: 15px; }
@@ -44,7 +75,7 @@ Albasri series, Albasri movies, Arabic series, Turkish series, Netflix series, o
         .logo span { color: var(--main); font-size: 12px; font-weight: 700; }
         .header-actions { display: flex; align-items: center; gap: 15px; }
         .theme-toggle { font-size: 20px; cursor: pointer; color: var(--text); transition: 0.3s; }
-        .search-container { position: relative; width: 300px; display: none; }
+        .search-container { position: relative; width: 300px; display: block; }
         .search-container input { width: 100%; background: var(--card); border: 1px solid var(--border); padding: 10px 40px 10px 15px; border-radius: 20px; color: var(--text); font-family: 'Cairo'; outline: none; transition: 0.3s; }
         .search-container i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001; display: none; backdrop-filter: blur(5px); }
@@ -85,22 +116,6 @@ Albasri series, Albasri movies, Arabic series, Turkish series, Netflix series, o
         .btn-back { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 8px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; }
         .loader-main { text-align: center; padding: 50px; color: var(--main); font-size: 40px; }
 
-        /* ===== Adsterra Ads - BASRI TV ===== */
-        .ad-wrap{width:100%;display:flex;justify-content:center;align-items:center;margin:16px 0;}
-        .ad-box{width:100%;max-width:360px;display:flex;justify-content:center;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 5px 15px var(--shadow);padding:10px;overflow:hidden;min-height:72px;}
-        .ad-box:empty{display:none;}
-        .ad-box.rectangle{max-width:320px;min-height:270px;padding:10px;}
-        .ad-grid-card{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:15px!important;box-shadow:0 5px 15px var(--shadow)!important;height:260px!important;min-height:260px!important;cursor:default!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:8px!important;}
-        .ad-grid-card .ad-box{width:100%;height:100%;max-width:none;min-height:0;padding:0;border:0;box-shadow:none;border-radius:12px;background:transparent;}
-        .ad-grid-card iframe{width:300px;height:250px;max-width:100%;transform:scale(.88);transform-origin:center;}
-        .ad-grid-card:hover{transform:none!important;border-color:var(--border)!important;box-shadow:0 5px 15px var(--shadow)!important;}
-        .smart-ad-card{position:relative;width:100%;height:100%;border-radius:12px;overflow:hidden;text-decoration:none;color:#fff;display:flex;align-items:flex-end;justify-content:center;background:#101016;}
-        .smart-ad-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.62);transition:.3s;}
-        .smart-ad-card:hover img{filter:brightness(.75);transform:scale(1.04);}
-        .smart-ad-card .smart-ad-badge{position:absolute;top:8px;right:8px;background:rgba(255,0,64,.95);color:#fff;font-size:10px;font-weight:900;padding:4px 8px;border-radius:999px;z-index:2;}
-        .smart-ad-card .smart-ad-title{position:relative;z-index:2;width:100%;padding:28px 8px 10px;text-align:center;font-size:13px;font-weight:900;line-height:1.35;background:linear-gradient(to top, rgba(0,0,0,.92), transparent);}
-        .player-footer{gap:10px;flex-wrap:wrap;}
-        .smart-player-btn{background:#2f2f37!important;}
         .site-logo{font-size:20px;font-weight:900;}
 
 
@@ -108,28 +123,21 @@ Albasri series, Albasri movies, Arabic series, Turkish series, Netflix series, o
         .server-bar::-webkit-scrollbar{display:none;}
         .server-btn{border:1px solid var(--border);background:var(--bg);color:var(--text);padding:9px 18px;border-radius:999px;font-family:'Cairo',sans-serif;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap;transition:.25s;display:flex;align-items:center;gap:7px;}
         .server-btn:hover,.server-btn.active{background:var(--main);color:#fff;border-color:var(--main);box-shadow:0 6px 18px rgba(255,0,64,.22);}
-        .server-btn.ad-server{background:#252532;}
-        .server-btn.ad-server:hover{background:var(--main);}
 
         @media (max-width: 600px) { 
             header { padding: 10px 15px; }
-            .search-container { width: 100%; margin-top: 15px; }
-            .search-active .search-container { display: block; order: 3; }
+            header { flex-wrap: wrap; }
+            .search-container { width: 100%; margin-top: 10px; order: 3; display: none; }
+            .search-active .search-container { display: block; }
             .container { padding: 0 10px; margin: 18px auto; }
             .content-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
             .custom-card { height: 160px; border-radius: 12px; }
-            .ad-grid-card{height:160px!important;min-height:160px!important;border-radius:12px!important;padding:5px!important;}
-            .ad-grid-card iframe{transform:scale(.52);}
-            .smart-ad-card .smart-ad-title{font-size:10px;padding:24px 5px 8px;}
-            .smart-ad-card .smart-ad-badge{font-size:9px;padding:3px 6px;}
             .card-title { font-size: 11px; padding: 22px 5px 8px; line-height:1.25; }
             .download-btn { width: 100%; justify-content: center; }
         }
         @media (max-width: 380px) {
             .content-grid { gap: 8px; }
             .custom-card { height: 145px; }
-            .ad-grid-card{height:145px!important;min-height:145px!important;}
-            .ad-grid-card iframe{transform:scale(.48);}
             .card-title{font-size:10px;}
         }
     </style>
@@ -158,33 +166,29 @@ Albasri series, Albasri movies, Arabic series, Turkish series, Netflix series, o
         <i class="fas fa-times close-sidebar" onclick="toggleSidebar()" style="cursor:pointer"></i>
     </div>
     <div class="sidebar-links">
-        <a href="#" onclick="showHome(); toggleSidebar();"><i class="fas fa-home"></i> الرئيسية</a>
-        <a href="#" onclick="loadData('series', '29', 1, 'مسلسلات عربية'); toggleSidebar();"><i class="fas fa-tv"></i> مسلسلات عربية</a>
-        <a href="#" onclick="loadData('series', '32', 1, 'مسلسلات تركية'); toggleSidebar();"><i class="fas fa-star-and-crescent"></i> مسلسلات تركية</a>
-        <a href="#" onclick="loadData('series', '30', 1, 'مسلسلات أجنبية'); toggleSidebar();"><i class="fas fa-globe"></i> مسلسلات أجنبية</a>
-        <a href="#" onclick="loadData('series', '31', 1, 'مسلسلات هندية'); toggleSidebar();"><i class="fas fa-om"></i> مسلسلات هندية</a>
-        <a href="#" onclick="loadData('series', '33', 1, 'مسلسلات آسيوية'); toggleSidebar();"><i class="fas fa-yin-yang"></i> مسلسلات آسيوية</a>
-        <a href="#" onclick="loadData('movies', '29', 1, 'أفلام عربية'); toggleSidebar();"><i class="fas fa-film"></i> أفلام عربية</a>
-        <a href="#" onclick="loadData('movies', '30', 1, 'أفلام أجنبية'); toggleSidebar();"><i class="fas fa-video"></i> أفلام أجنبية</a>
-        <a href="#" onclick="loadData('movies', '32', 1, 'أفلام تركية'); toggleSidebar();"><i class="fas fa-ticket-alt"></i> أفلام تركية</a>
-        <a href="#" onclick="loadData('movies', '31', 1, 'أفلام هندية'); toggleSidebar();"><i class="fas fa-compact-disc"></i> أفلام هندية</a>
-        <a href="#" onclick="loadData('movies', '33', 1, 'أفلام آسيوية'); toggleSidebar();"><i class="fas fa-camera"></i> أفلام آسيوية</a>
+        <a href="javascript:void(0)" onclick="showHome(); toggleSidebar();"><i class="fas fa-home"></i> الرئيسية</a>
+        <a href="javascript:void(0)" onclick="loadData('series', '29', 1, 'مسلسلات عربية'); toggleSidebar();"><i class="fas fa-tv"></i> مسلسلات عربية</a>
+        <a href="javascript:void(0)" onclick="loadData('series', '32', 1, 'مسلسلات تركية'); toggleSidebar();"><i class="fas fa-star-and-crescent"></i> مسلسلات تركية</a>
+        <a href="javascript:void(0)" onclick="loadData('series', '30', 1, 'مسلسلات أجنبية'); toggleSidebar();"><i class="fas fa-globe"></i> مسلسلات أجنبية</a>
+        <a href="javascript:void(0)" onclick="loadData('series', '31', 1, 'مسلسلات هندية'); toggleSidebar();"><i class="fas fa-om"></i> مسلسلات هندية</a>
+        <a href="javascript:void(0)" onclick="loadData('series', '33', 1, 'مسلسلات آسيوية'); toggleSidebar();"><i class="fas fa-yin-yang"></i> مسلسلات آسيوية</a>
+        <a href="javascript:void(0)" onclick="loadData('movies', '29', 1, 'أفلام عربية'); toggleSidebar();"><i class="fas fa-film"></i> أفلام عربية</a>
+        <a href="javascript:void(0)" onclick="loadData('movies', '30', 1, 'أفلام أجنبية'); toggleSidebar();"><i class="fas fa-video"></i> أفلام أجنبية</a>
+        <a href="javascript:void(0)" onclick="loadData('movies', '32', 1, 'أفلام تركية'); toggleSidebar();"><i class="fas fa-ticket-alt"></i> أفلام تركية</a>
+        <a href="javascript:void(0)" onclick="loadData('movies', '31', 1, 'أفلام هندية'); toggleSidebar();"><i class="fas fa-compact-disc"></i> أفلام هندية</a>
+        <a href="javascript:void(0)" onclick="loadData('movies', '33', 1, 'أفلام آسيوية'); toggleSidebar();"><i class="fas fa-camera"></i> أفلام آسيوية</a>
     </div>
 </div>
 
 <div class="container">
     <div id="loader" class="loader-main" style="display:none;"><i class="fas fa-circle-notch fa-spin"></i></div>
-    <div class="ad-wrap" id="home-top-ad-wrap"><div class="ad-box" id="home-top-banner-ad"></div></div>
     <div id="home-view" class="content-grid"></div>
-    <div class="ad-wrap" id="home-bottom-ad-wrap"><div class="ad-box" id="home-bottom-banner-ad"></div></div>
     <div id="section-view" style="display:none;">
         <div class="top-bar">
             <button class="btn-back" onclick="showHome()"><i class="fas fa-arrow-right"></i> الرئيسية</button>
             <h3 id="section-title" style="margin:0;"></h3>
         </div>
-        <div class="ad-wrap"><div class="ad-box" id="section-top-banner-ad"></div></div>
         <div id="items-grid" class="content-grid"></div>
-        <div class="ad-wrap"><div class="ad-box" id="section-bottom-banner-ad"></div></div>
         <div id="pagination-box" class="pagination"></div>
     </div>
     <div id="eps-view" style="display:none;">
@@ -192,9 +196,7 @@ Albasri series, Albasri movies, Arabic series, Turkish series, Netflix series, o
             <button class="btn-back" onclick="closeEps()"><i class="fas fa-arrow-right"></i> رجوع للقسم</button>
             <h3 id="series-title" style="margin:0;"></h3>
         </div>
-        <div class="ad-wrap"><div class="ad-box" id="episodes-top-banner-ad"></div></div>
         <div id="episodes-grid" class="content-grid"></div>
-        <div class="ad-wrap"><div class="ad-box" id="episodes-bottom-banner-ad"></div></div>
     </div>
 </div>
 
@@ -206,7 +208,6 @@ Albasri series, Albasri movies, Arabic series, Turkish series, Netflix series, o
         </div>
         <div class="server-bar">
             <button class="server-btn active" id="server-one-btn" onclick="playServerOne()"><i class="fas fa-play-circle"></i> سيرفر أول</button>
-            <button class="server-btn ad-server" id="server-two-btn" onclick="openServerTwoAd()"><i class="fas fa-bolt"></i> سيرفر ثاني</button>
         </div>
         <div class="video-container">
             <div id="player-loading"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
@@ -219,164 +220,83 @@ Albasri series, Albasri movies, Arabic series, Turkish series, Netflix series, o
 </div>
 
 
-<!-- إعلان Adsterra الإضافي: يعمل في كل صفحات الموقع لأن الموقع صفحة واحدة متعددة الأقسام -->
-<script src="https://pl29234531.profitablecpmratenetwork.com/0c/64/c5/0c64c59cf5fd8aab1e200c0e2392787d.js"></script>
-<script src="https://pl29234530.profitablecpmratenetwork.com/34/a3/3c/34a33c976d04ca0d68ec454412d1646b.js"></script>
-
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 <script>
     const player = new Plyr('#player');
     const API = "https://seres.albasriali1990.workers.dev/";
+
+    const SEARCH_SECTIONS = [
+        {id:'29', type:'series', name:'مسلسلات عربية'},
+        {id:'32', type:'series', name:'مسلسلات تركية'},
+        {id:'30', type:'series', name:'مسلسلات أجنبية'},
+        {id:'31', type:'series', name:'مسلسلات هندية'},
+        {id:'33', type:'series', name:'مسلسلات آسيوية'},
+        {id:'29', type:'movies', name:'أفلام عربية'},
+        {id:'30', type:'movies', name:'أفلام أجنبية'},
+        {id:'32', type:'movies', name:'أفلام تركية'},
+        {id:'31', type:'movies', name:'أفلام هندية'},
+        {id:'33', type:'movies', name:'أفلام آسيوية'}
+    ];
+
     let current = { type: '', sec: '', page: 1, name: '', view: 'home' };
     let currentPlayUrl = '';
+    let lastSectionState = null;
+    let searchTimer = null;
+    let searchToken = 0;
 
-    const BANNER_320 = { key: 'fad72cb3686c4497752ccf2b13ac59b9', width: 320, height: 50 };
-    const RECTANGLE_300 = { key: 'cefe0dc1c1efcb94190721950e871151', width: 300, height: 250 };
-    const SMART_LINK = 'https://www.profitablecpmratenetwork.com/mrx90m47?key=7c1be2dce06016458c591206bb7e89ae';
-    const SMART_AD_IMAGES = [
-        'https://up6.cc/2026/04/177672181699171.jpg',
-        'https://up6.cc/2026/04/177578061698531.png',
-        'https://up6.cc/2026/04/177578141485251.png',
-        'https://up6.cc/2026/04/177578061707422.png'
-    ];
-    function buildAdFrameHTML(key, width, height) {
-        return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden;width:100%;height:100%;display:flex;justify-content:center;align-items:center;}</style>
-</head><body>
-<script>
-atOptions={'key':'${key}','format':'iframe','height':${height},'width':${width},'params':{}};
-<\/script>
-<script src="https://www.highperformanceformat.com/${key}/invoke.js"><\/script>
-</body></html>`;
+    function $(id) { return document.getElementById(id); }
+
+    function htmlEscape(text) {
+        return String(text || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     }
 
-    function renderIframeAd(containerId, config) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = '';
-        const iframe = document.createElement('iframe');
-        iframe.width = config.width;
-        iframe.height = config.height;
-        iframe.scrolling = 'no';
-        iframe.frameBorder = '0';
-        iframe.allowTransparency = 'true';
-        iframe.style.border = '0';
-        iframe.style.overflow = 'hidden';
-        iframe.style.background = 'transparent';
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-        iframe.srcdoc = buildAdFrameHTML(config.key, config.width, config.height);
-        container.appendChild(iframe);
+    function normalizeText(text) {
+        return String(text || '')
+            .toLowerCase()
+            .replace(/[أإآٱ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/ؤ/g, 'و')
+            .replace(/ئ/g, 'ي')
+            .replace(/[ًٌٍَُِّْـ]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
     }
 
-    function createIframeAdCard() {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'ad-grid-card';
-        const adBox = document.createElement('div');
-        adBox.className = 'ad-box rectangle';
-        wrapper.appendChild(adBox);
-
-        const iframe = document.createElement('iframe');
-        iframe.width = RECTANGLE_300.width;
-        iframe.height = RECTANGLE_300.height;
-        iframe.scrolling = 'no';
-        iframe.frameBorder = '0';
-        iframe.allowTransparency = 'true';
-        iframe.style.border = '0';
-        iframe.style.overflow = 'hidden';
-        iframe.style.background = 'transparent';
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-        iframe.srcdoc = buildAdFrameHTML(RECTANGLE_300.key, RECTANGLE_300.width, RECTANGLE_300.height);
-        adBox.appendChild(iframe);
-        return wrapper;
-    }
-
-    function createSmartImageAdCard(index = 0) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'ad-grid-card';
-        const img = SMART_AD_IMAGES[index % SMART_AD_IMAGES.length];
-        wrapper.innerHTML = `<a class="smart-ad-card" href="${SMART_LINK}" target="_blank" rel="noopener noreferrer"><img src="${img}" alt="إعلان"><span class="smart-ad-badge">إعلان</span><span class="smart-ad-title">شاهد المزيد من المحتوى المميز</span></a>`;
-        return wrapper;
-    }
-
-    function createImageAdCard(index = 0) {
-        // نبدّل بين إعلان iframe وإعلان صورة مباشر حتى يزيد الربح بدون إزعاج المستخدم.
-        return index % 2 === 0 ? createIframeAdCard() : createSmartImageAdCard(index);
-    }
-
-    function insertImageAds(gridElement, frequency = 4, maxAds = 3) {
-        if (!gridElement) return;
-        const oldAds = [...gridElement.children].filter(el => el.classList.contains('ad-grid-card'));
-        oldAds.forEach(ad => ad.remove());
-
-        const cards = [...gridElement.children].filter(el => !el.classList.contains('ad-grid-card'));
-        if (cards.length < frequency) return;
-
-        let inserted = 0;
-        for (let i = frequency; i < cards.length && inserted < maxAds; i += frequency) {
-            const refCard = cards[i - 1];
-            const adCard = createImageAdCard(inserted);
-            if (refCard && refCard.nextSibling) gridElement.insertBefore(adCard, refCard.nextSibling);
-            else gridElement.appendChild(adCard);
-            inserted++;
-        }
-    }
-
-    function setViewAds(view) {
-        const homeTop = document.getElementById('home-top-ad-wrap');
-        const homeBottom = document.getElementById('home-bottom-ad-wrap');
-        if (homeTop) homeTop.style.display = view === 'home' ? 'flex' : 'none';
-        if (homeBottom) homeBottom.style.display = view === 'home' ? 'flex' : 'none';
-    }
-
-    function loadStaticAds() {
-        // إعلانات خفيفة: بانر واحد أعلى وبانر واحد أسفل لكل صفحة فقط
-        ['home-top-banner-ad','home-bottom-banner-ad','section-top-banner-ad','section-bottom-banner-ad','episodes-top-banner-ad','episodes-bottom-banner-ad']
-            .forEach(id => renderIframeAd(id, BANNER_320));
-    }
-
-
-    // --- إضافة نظام مراقبة زر الرجوع الذكي ---
-    window.onpopstate = function(event) {
-        if (event.state) {
-            if (event.state.view === 'home') {
-                showHome(false);
-            } else if (event.state.view === 'section') {
-                loadData(event.state.type, event.state.sec, event.state.page, event.state.name, false);
-            } else if (event.state.view === 'eps') {
-                closePlayer(false);
-                document.getElementById('eps-view').style.display = 'block';
-                document.getElementById('section-view').style.display = 'none';
-                setViewAds('section');
-            }
-        } else {
-            showHome(false);
-        }
-        // إغلاق المشغل دائماً عند الرجوع إذا كان مفتوحاً
-        if (document.getElementById('watch-modal').style.display === 'flex') {
-            closePlayer(false);
-        }
-    };
-
-    function toggleTheme() {
-        const html = document.documentElement;
-        const icon = document.getElementById('theme-icon');
-        if (html.getAttribute('data-theme') === 'dark') {
-            html.setAttribute('data-theme', 'light');
-            icon.classList.replace('fa-moon', 'fa-sun');
-        } else {
-            html.setAttribute('data-theme', 'dark');
-            icon.classList.replace('fa-sun', 'fa-moon');
-        }
+    function closeSidebarOnly() {
+        const sidebar = $('sidebar');
+        const overlay = $('sidebar-overlay');
+        if (sidebar) sidebar.classList.remove('open');
+        if (overlay) overlay.style.display = 'none';
     }
 
     function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
+        const sidebar = $('sidebar');
+        const overlay = $('sidebar-overlay');
+        if (!sidebar || !overlay) return;
         sidebar.classList.toggle('open');
         overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
     }
 
-    function toggleMobileSearch() { document.getElementById('main-header').classList.toggle('search-active'); }
+    function toggleMobileSearch() {
+        const header = $('main-header');
+        if (!header) return;
+        header.classList.toggle('search-active');
+        const input = $('user-search');
+        if (header.classList.contains('search-active') && input) setTimeout(() => input.focus(), 100);
+    }
+
+    function toggleTheme() {
+        const html = document.documentElement;
+        const icon = $('theme-icon');
+        if (html.getAttribute('data-theme') === 'dark') {
+            html.setAttribute('data-theme', 'light');
+            if (icon) icon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            html.setAttribute('data-theme', 'dark');
+            if (icon) icon.classList.replace('fa-sun', 'fa-moon');
+        }
+    }
 
     const sectionImages = {
         series_29: "https://up6.cc/2026/04/177578061698531.png", series_30: "https://up6.cc/2026/04/177578066558531.png",
@@ -385,6 +305,17 @@ atOptions={'key':'${key}','format':'iframe','height':${height},'width':${width},
         movies_30: "https://up6.cc/2026/04/177578141491472.png", movies_31: "https://up6.cc/2026/04/177578141497723.png",
         movies_32: "https://up6.cc/2026/04/17757814150724.png", movies_33: "https://up6.cc/2026/04/177578152800671.png"
     };
+
+    function makeCard(item, type, imageOverride) {
+        const card = document.createElement('div');
+        card.className = 'custom-card movie-item';
+        card.dataset.title = item.title || item.name || '';
+        const image = imageOverride || item.image || '';
+        const icon = type === 'movies' ? 'fa-play' : 'fa-list-ul';
+        card.innerHTML = `<div class="card-img" style="background-image: url('${htmlEscape(image)}')"></div><div class="card-play"><i class="fas ${icon}"></i></div><div class="card-title">${htmlEscape(item.title || item.name || 'بدون عنوان')}</div>`;
+        card.addEventListener('click', () => handleSelection(item.url, image, type, item.title || item.name || 'بدون عنوان'));
+        return card;
+    }
 
     function initLauncher() {
         const cats = [
@@ -399,134 +330,208 @@ atOptions={'key':'${key}','format':'iframe','height':${height},'width':${width},
             {id:'31', type:'movies', name:'أفلام هندية', img:sectionImages.movies_31},
             {id:'33', type:'movies', name:'أفلام آسيوية', img:sectionImages.movies_33}
         ];
-        const grid = document.getElementById('home-view');
+        const grid = $('home-view');
+        if (!grid) return;
         grid.innerHTML = '';
-        cats.forEach((c, index) => {
+        cats.forEach(c => {
             const card = document.createElement('div');
             card.className = 'custom-card';
-            card.setAttribute('onclick', `loadData('${c.type}', '${c.id}', 1, '${c.name}')`);
-            card.innerHTML = `<div class="card-img" style="background-image: url('${c.img}')"></div><div class="card-play"><i class="fas fa-folder-open"></i></div><div class="card-title">${c.name}</div>`;
+            card.innerHTML = `<div class="card-img" style="background-image: url('${htmlEscape(c.img)}')"></div><div class="card-play"><i class="fas fa-folder-open"></i></div><div class="card-title">${htmlEscape(c.name)}</div>`;
+            card.addEventListener('click', () => loadData(c.type, c.id, 1, c.name));
             grid.appendChild(card);
         });
-        insertImageAds(grid, 3, 3);
-        setViewAds('home');
-        history.replaceState({view: 'home'}, '');
+        if (!history.state) history.replaceState({view: 'home'}, '');
     }
-    initLauncher();
 
     function showHome(push = true) {
-        document.getElementById('home-view').style.display = 'grid';
-        document.getElementById('section-view').style.display = 'none';
-        document.getElementById('eps-view').style.display = 'none';
-        document.getElementById('search-bar').style.display = 'none';
+        $('home-view').style.display = 'grid';
+        $('section-view').style.display = 'none';
+        $('eps-view').style.display = 'none';
+        $('loader').style.display = 'none';
+        $('pagination-box').innerHTML = '';
         current.view = 'home';
-        setViewAds('home');
-        if(push) history.pushState({view: 'home'}, '');
+        closeSidebarOnly();
+        if (push) history.pushState({view: 'home'}, '');
     }
 
-    function loadData(type, sec, page, name = current.name, push = true) {
-        current = { type, sec, page, name, view: 'section' }; 
-        if(push) history.pushState({view: 'section', type, sec, page, name}, '');
+    async function loadData(type, sec, page, name = current.name, push = true) {
+        current = { type, sec, page, name, view: 'section' };
+        lastSectionState = { type, sec, page, name };
+        if (push) history.pushState({view: 'section', type, sec, page, name}, '');
 
-        document.getElementById('home-view').style.display = 'none';
-        setViewAds('section');
-        document.getElementById('section-view').style.display = 'block';
-        document.getElementById('loader').style.display = 'block';
-        document.getElementById('items-grid').innerHTML = '';
-        document.getElementById('section-title').innerText = name;
-        
-        fetch(`${API}?action=list&type=${type}&section=${sec}&page=${page}`)
-        .then(res => res.json()).then(data => {
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('search-bar').style.display = 'block';
-            if(data.items) {
-                data.items.forEach(item => {
-                    let icon = type === 'movies' ? 'fa-play' : 'fa-list-ul';
-                    document.getElementById('items-grid').innerHTML += `<div class="custom-card movie-item" data-title="${item.title}" onclick="handleSelection('${item.url}', '${item.image}', '${type}', '${item.title}')"><div class="card-img" style="background-image: url('${item.image}')"></div><div class="card-play"><i class="fas ${icon}"></i></div><div class="card-title">${item.title}</div></div>`;
-                });
-            }
-            insertImageAds(document.getElementById('items-grid'), 3, 4);
+        $('home-view').style.display = 'none';
+        $('eps-view').style.display = 'none';
+        $('section-view').style.display = 'block';
+        $('loader').style.display = 'block';
+        $('items-grid').innerHTML = '';
+        $('pagination-box').innerHTML = '';
+        $('section-title').innerText = name;
+        closeSidebarOnly();
+
+        try {
+            const res = await fetch(`${API}?action=list&type=${encodeURIComponent(type)}&section=${encodeURIComponent(sec)}&page=${encodeURIComponent(page)}`);
+            const data = await res.json();
+            const items = Array.isArray(data.items) ? data.items : [];
+            const grid = $('items-grid');
+            items.forEach(item => grid.appendChild(makeCard(item, type)));
+            if (!items.length) grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-weight:700;">لا توجد عناصر في هذه الصفحة</div>`;
             renderPagination();
-        }).catch(() => { document.getElementById('loader').style.display = 'none'; });
+        } catch (e) {
+            $('items-grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-weight:700;">تعذر جلب البيانات، تأكد من رفع الملف على استضافة HTTPS</div>`;
+        } finally {
+            $('loader').style.display = 'none';
+        }
     }
 
     function renderPagination() {
-        const box = document.getElementById('pagination-box');
+        const box = $('pagination-box');
         let html = '';
-        if (current.page > 1) html += `<button class="pag-btn" onclick="loadData('${current.type}', '${current.sec}', ${current.page - 1}, '${current.name}')">السابق</button>`;
+        if (current.page > 1) html += `<button type="button" class="pag-btn" id="prev-page">السابق</button>`;
         html += `<div class="pag-number">${current.page}</div>`;
-        html += `<button class="pag-btn" onclick="loadData('${current.type}', '${current.sec}', ${current.page + 1}, '${current.name}')">التالي</button>`;
+        html += `<button type="button" class="pag-btn" id="next-page">التالي</button>`;
         box.innerHTML = html;
+        const prev = $('prev-page');
+        const next = $('next-page');
+        if (prev) prev.addEventListener('click', () => loadData(current.type, current.sec, current.page - 1, current.name));
+        if (next) next.addEventListener('click', () => loadData(current.type, current.sec, current.page + 1, current.name));
+    }
+
+    async function fetchListPage(sec, page) {
+        const res = await fetch(`${API}?action=list&type=${encodeURIComponent(sec.type)}&section=${encodeURIComponent(sec.id)}&page=${page}`);
+        const data = await res.json();
+        return Array.isArray(data.items) ? data.items : [];
+    }
+
+    async function fetchSearchPages(query, token) {
+        const wanted = normalizeText(query);
+        const matches = [];
+        const seen = new Set();
+        const MAX_SEARCH_PAGES = 80;
+
+        for (const sec of SEARCH_SECTIONS) {
+            for (let page = 1; page <= MAX_SEARCH_PAGES; page++) {
+                if (token !== searchToken) return null;
+                let items = [];
+                try {
+                    items = await fetchListPage(sec, page);
+                } catch (e) {
+                    break;
+                }
+                if (!items.length) break;
+
+                for (const item of items) {
+                    const title = item.title || item.name || '';
+                    const key = `${sec.type}-${item.url || title}`;
+                    if (seen.has(key)) continue;
+                    seen.add(key);
+                    if (normalizeText(title).includes(wanted)) {
+                        matches.push({...item, type: sec.type, sectionName: sec.name});
+                    }
+                }
+            }
+        }
+        return matches;
     }
 
     function runSearch() {
-        let q = document.getElementById('user-search').value.toLowerCase();
-        let items = document.getElementsByClassName('movie-item');
-        for (let i of items) i.style.display = i.getAttribute('data-title').toLowerCase().includes(q) ? "flex" : "none";
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(async () => {
+            const input = $('user-search');
+            const q = input ? input.value.trim() : '';
+            const myToken = ++searchToken;
+
+            if (!q) {
+                if (lastSectionState) loadData(lastSectionState.type, lastSectionState.sec, lastSectionState.page, lastSectionState.name, false);
+                else showHome(false);
+                return;
+            }
+
+            $('home-view').style.display = 'none';
+            $('eps-view').style.display = 'none';
+            $('section-view').style.display = 'block';
+            $('loader').style.display = 'block';
+            $('items-grid').innerHTML = '';
+            $('pagination-box').innerHTML = '';
+            $('section-title').innerText = `جاري البحث عن: ${q}`;
+
+            const results = await fetchSearchPages(q, myToken);
+            if (results === null) return;
+            if (myToken !== searchToken) return;
+            $('loader').style.display = 'none';
+            $('section-title').innerText = `نتائج البحث عن: ${q}`;
+
+            const grid = $('items-grid');
+            grid.innerHTML = '';
+            if (!results.length) {
+                grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-weight:700;">لا توجد نتائج لهذا البحث</div>`;
+                return;
+            }
+            results.forEach(item => grid.appendChild(makeCard(item, item.type)));
+        }, 500);
     }
 
     function handleSelection(url, image, type, title) {
-        if (type === 'movies') { currentPlayUrl = url; openPlayer(title); fetchAndPlay(url); }
-        else { loadEpisodes(url, image, title); }
+        if (!url) return;
+        if (type === 'movies') {
+            currentPlayUrl = url;
+            openPlayer(title);
+            fetchAndPlay(url);
+        } else {
+            loadEpisodes(url, image, title);
+        }
     }
 
-    function loadEpisodes(url, image, title) {
-        document.getElementById('loader').style.display = 'block';
-        history.pushState({view: 'eps'}, ''); // حفظ حالة صفحة الحلقات
-
-        fetch(`${API}?action=episodes&url=${encodeURIComponent(url)}`)
-        .then(res => res.json()).then(data => {
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('section-view').style.display = 'none';
-            document.getElementById('eps-view').style.display = 'block';
-            setViewAds('section');
-            document.getElementById('series-title').innerText = title;
-            const grid = document.getElementById('episodes-grid'); grid.innerHTML = '';
-            
+    async function loadEpisodes(url, image, title) {
+        $('loader').style.display = 'block';
+        history.pushState({view: 'eps'}, '');
+        try {
+            const res = await fetch(`${API}?action=episodes&url=${encodeURIComponent(url)}`);
+            const data = await res.json();
+            $('section-view').style.display = 'none';
+            $('home-view').style.display = 'none';
+            $('eps-view').style.display = 'block';
+            $('series-title').innerText = title;
+            const grid = $('episodes-grid');
+            grid.innerHTML = '';
             const episodes = Array.isArray(data) ? data : (data.episodes || []);
             episodes.forEach(ep => {
-                grid.innerHTML += `<div class="custom-card" onclick="currentPlayUrl='${ep.url || ep.episode_url}'; openPlayer('${ep.name}'); fetchAndPlay(currentPlayUrl);"><div class="card-img" style="background-image: url('${image}')"></div><div class="card-play"><i class="fas fa-play"></i></div><div class="card-title">${ep.name}</div></div>`;
+                const epUrl = ep.url || ep.episode_url || '';
+                const epTitle = ep.name || ep.title || 'حلقة';
+                const card = document.createElement('div');
+                card.className = 'custom-card';
+                card.innerHTML = `<div class="card-img" style="background-image: url('${htmlEscape(image)}')"></div><div class="card-play"><i class="fas fa-play"></i></div><div class="card-title">${htmlEscape(epTitle)}</div>`;
+                card.addEventListener('click', () => {
+                    currentPlayUrl = epUrl;
+                    openPlayer(epTitle);
+                    fetchAndPlay(currentPlayUrl);
+                });
+                grid.appendChild(card);
             });
-            insertImageAds(grid, 3, 4);
-        }).catch(() => { document.getElementById('loader').style.display = 'none'; });
-    }
-
-    function closeEps() { 
-        history.back(); // نستخدم التراجع الطبيعي
-    }
-
-    function requestPlayerFullscreen() {
-        const wrapper = document.querySelector('.player-wrapper');
-        if (!wrapper) return;
-        const request = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.msRequestFullscreen;
-        if (request) {
-            try { request.call(wrapper); } catch (e) { /* بعض المتصفحات تمنع ملء الشاشة تلقائياً */ }
+            if (!episodes.length) grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-weight:700;">لا توجد حلقات</div>`;
+        } catch (e) {
+            $('episodes-grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-weight:700;">تعذر جلب الحلقات</div>`;
+        } finally {
+            $('loader').style.display = 'none';
         }
     }
 
-    function exitPlayerFullscreen() {
-        const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
-        if ((document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) && exit) {
-            try { exit.call(document); } catch (e) {}
-        }
+    function closeEps() {
+        if (lastSectionState) loadData(lastSectionState.type, lastSectionState.sec, lastSectionState.page, lastSectionState.name);
+        else showHome();
     }
-    
-    function openPlayer(title) { 
-        document.getElementById('watch-modal').style.display = 'flex'; 
-        document.getElementById('video-title').innerText = title; 
-        document.getElementById('player-loading').style.display = 'flex'; 
-        setActiveServer(1); 
+
+    function openPlayer(title) {
+        $('watch-modal').style.display = 'flex';
+        $('video-title').innerText = title;
+        $('player-loading').style.display = 'flex';
+        setActiveServer(1);
         document.body.style.overflow = 'hidden';
-        history.pushState({view: 'player'}, ''); // حفظ حالة المشغل
+        history.pushState({view: 'player'}, '');
     }
-
 
     function setActiveServer(serverNumber) {
-        const one = document.getElementById('server-one-btn');
-        const two = document.getElementById('server-two-btn');
-        if (!one || !two) return;
-        one.classList.toggle('active', serverNumber === 1);
-        two.classList.toggle('active', serverNumber === 2);
+        const one = $('server-one-btn');
+        if (one) one.classList.toggle('active', serverNumber === 1);
     }
 
     function playServerOne() {
@@ -534,32 +539,48 @@ atOptions={'key':'${key}','format':'iframe','height':${height},'width':${width},
         if (currentPlayUrl) fetchAndPlay(currentPlayUrl);
     }
 
-    function openServerTwoAd() {
-        setActiveServer(2);
-        window.open(SMART_LINK, '_blank', 'noopener,noreferrer');
-        setTimeout(() => setActiveServer(1), 700);
-    }
-
-    function fetchAndPlay(url) {
-        fetch(`${API}?action=watch&url=${encodeURIComponent(url)}`)
-        .then(res => res.json()).then(data => {
-            if(data.stream) {
+    async function fetchAndPlay(url) {
+        $('player-loading').style.display = 'flex';
+        try {
+            const res = await fetch(`${API}?action=watch&url=${encodeURIComponent(url)}`);
+            const data = await res.json();
+            if (data.stream) {
                 player.source = { type: 'video', sources: [{ src: data.stream, type: 'video/mp4' }] };
-                document.getElementById('player-loading').style.display = 'none';
-                document.getElementById('dl-link').href = data.stream;
+                $('dl-link').href = data.stream;
+                $('player-loading').style.display = 'none';
                 player.play();
+            } else {
+                $('player-loading').innerHTML = 'تعذر تشغيل الرابط';
             }
-        });
+        } catch (e) {
+            $('player-loading').innerHTML = 'تعذر تشغيل الرابط';
+        }
     }
 
-    function closePlayer(pop = true) { 
-        player.pause(); 
-        document.getElementById('watch-modal').style.display = 'none'; 
-        player.source = { type: 'video', sources: [] }; 
+    function closePlayer(pop = true) {
+        player.pause();
+        $('watch-modal').style.display = 'none';
+        player.source = { type: 'video', sources: [] };
         document.body.style.overflow = 'auto';
-        if(pop) history.back();
+        if (pop && history.state && history.state.view === 'player') history.back();
     }
-    window.addEventListener('load', loadStaticAds);
+
+    window.onpopstate = function(event) {
+        if ($('watch-modal').style.display === 'flex') {
+            closePlayer(false);
+            return;
+        }
+        const state = event.state || {view:'home'};
+        if (state.view === 'home') showHome(false);
+        else if (state.view === 'section') loadData(state.type, state.sec, state.page, state.name, false);
+        else if (state.view === 'eps') {
+            $('home-view').style.display = 'none';
+            $('section-view').style.display = 'none';
+            $('eps-view').style.display = 'block';
+        }
+    };
+
+    window.addEventListener('DOMContentLoaded', initLauncher);
 </script>
 </body>
 </html>
