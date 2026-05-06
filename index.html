@@ -2,221 +2,281 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>البصري تيفي | ALBASRI TV</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>البصري تيفي | ALBASRI TV - تحميل التطبيق والمشغل</title>
     <link rel="icon" type="image/jpg" href="https://up6.cc/2026/04/177672181699171.jpg">
-    
-    <meta name="description" content="حمل الآن تطبيق البصري تي في (ALBASRI TV) لمشاهدة أقوى المحتويات الرياضية والتقنية. المنصة الرسمية للمطور علي يعقوب (روميو).">
-    <meta name="keywords" content="البصري تي في, ALBASRI TV, تحميل تطبيق البصري, تطبيق Basri Pro, مشغل BSR Player, روميو, بث مباشر">
+    <meta name="description" content="تحميل تطبيق البصري تي في ومشغل BSR Player. كود تفعيل 2025، أكواد Downloader للشاشات الذكية.">
     <meta name="author" content="Romeo">
-    
+
+    <!-- جميع إعلانات Adsterra (مضاعفة) -->
+    <script src="https://pl29234531.profitablecpmratenetwork.com/0c/64/c5/0c64c59cf5fd8aab1e200c0e2392787d.js"></script>
+    <script src="https://pl29234530.profitablecpmratenetwork.com/34/a3/3c/34a33c976d04ca0d68ec454412d1646b.js"></script>
+    <script async="async" data-cfasync="false" src="https://pl29234489.profitablecpmratenetwork.com/c7a80e0820745172369d948cc21660f4/invoke.js"></script>
+    <script async="async" data-cfasync="false" src="https://pl29234489.profitablecpmratenetwork.com/c7a80e0820745172369d948cc21660f4/invoke.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root {
-            --bg: #030712;
-            --primary: #00d2ff;
-            --secondary: #3a7bd5;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --text-dim: #9ca3af;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: 0.3s ease; }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: var(--bg);
             background: radial-gradient(circle at center, #0b214d 0%, #030712 100%);
-            color: var(--text-main);
+            color: #ffffff;
             min-height: 100vh;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+        }
+
+        /* توزيع مرن يناسب جميع الشاشات */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .main-card {
-            width: 100%;
-            max-width: 800px;
-            background: var(--glass);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 30px 25px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
 
         .brand-logo {
             width: 120px;
             height: 120px;
-            border-radius: 25px;
-            margin-bottom: 15px;
-            border: 2px solid var(--primary);
-            padding: 5px;
-            background: #000;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+            border-radius: 30px;
+            border: 2px solid #00d2ff;
             object-fit: cover;
+            margin-bottom: 20px;
         }
 
-        h1 { font-size: clamp(24px, 5vw, 32px); font-weight: 900; margin-bottom: 10px; color: var(--primary); text-shadow: 0 2px 10px rgba(0,210,255,0.3); }
-        .tagline { color: var(--text-dim); margin-bottom: 30px; font-size: 16px; }
-
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 40px;
+        h1 {
+            font-size: clamp(26px, 6vw, 42px);
+            color: #00d2ff;
+            font-weight: 900;
         }
-        .preview-grid img {
-            width: 100%;
-            aspect-ratio: 9/16;
-            object-fit: cover;
-            border-radius: 15px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-        }
-        .preview-grid img:hover { transform: scale(1.05); border-color: var(--primary); }
 
-        .actions-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+        .tagline {
+            color: #9ca3af;
             margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        /* أزرار التحميل */
+        .actions-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
         }
 
         .btn {
             text-decoration: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-weight: 700;
-            display: flex;
+            padding: 16px 28px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 18px;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 16px;
+            gap: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            color: white;
+            border: none;
         }
 
-        .btn-main { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2); }
-        .btn-sub { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); }
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+        .btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
 
-        .services-section {
-            background: rgba(0,0,0,0.2);
+        /* أقسام الأكواد */
+        .activation-section, .downloader-section {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 30px;
             padding: 25px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
+            margin: 25px 0;
+            border: 1px solid #00d2ff;
         }
 
-        .nav-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
+        .btn-show {
+            background: #00d2ff;
+            color: black;
+            padding: 12px 25px;
+            border-radius: 40px;
+            font-weight: bold;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .hidden-code-box {
+            display: none;
+            background: #000000aa;
+            padding: 20px;
+            border-radius: 20px;
             margin-top: 15px;
         }
 
-        .nav-item {
-            text-decoration: none;
-            color: #fff;
-            padding: 8px 15px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            font-size: 13px;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .nav-item:hover { background: var(--primary); color: #000; }
-
-        .downloader-box {
-            margin-top: 30px;
-            padding: 20px;
-            border: 1px dashed var(--primary);
+        .code-numbers {
+            font-size: 40px;
+            font-weight: bold;
+            color: #ffd966;
+            background: #1e1e2f;
+            padding: 10px 25px;
             border-radius: 20px;
+            display: inline-block;
         }
+
         .code-display {
-            font-size: 35px;
-            font-weight: 900;
-            color: var(--primary);
-            letter-spacing: 5px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #00d2ff;
+            background: #000000aa;
+            padding: 12px 20px;
+            border-radius: 20px;
             cursor: pointer;
-            display: block;
+            display: inline-block;
             margin: 10px 0;
         }
 
-        footer { margin-top: 40px; font-size: 12px; color: var(--text-dim); border-top: 1px solid var(--border); padding-top: 20px; }
+        /* شبكة إعلانات إضافية */
+        .ad-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
 
-        @media (max-width: 480px) {
-            .main-card { padding: 25px 15px; }
-            .preview-grid { gap: 8px; }
+        .ad-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #aaa;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .main-card {
+                padding: 20px;
+            }
+            .code-numbers, .code-display {
+                font-size: 24px;
+            }
+            .btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
+<div class="container">
+    <div class="main-card">
+        <img src="https://up6.cc/2026/04/177610707754814.jpg" class="brand-logo" alt="Logo">
+        <h1>البصري تيفي ALBASRI TV</h1>
+        <p class="tagline">كود التفعيل 2025 • تحميل التطبيق والمشغل • أكواد Downloader</p>
 
-<div class="main-card">
-    <img src="https://up6.cc/2026/04/177610707754814.jpg" alt="Logo" class="brand-logo">
-    
-    <h1>البصري تيفي ALBASRI TV</h1>
-    <p class="tagline">المنصة الرسمية لتحميل تطبيقات البصري و BSR Player</p>
-
-    <div class="preview-grid">
-        <img src="https://up6.cc/2026/04/177610707742171.jpg" alt="Screen 1">
-        <img src="https://up6.cc/2026/04/177610707751573.jpg" alt="Screen 2">
-        <img src="https://up6.cc/2026/04/177610707748052.jpg" alt="Screen 3">
-    </div>
-
-    <div class="actions-group">
-        <a href="https://github.com/albasri-tv/admin/releases/download/v1.0.0/ALBASRI-TV.apk" class="btn btn-main">
-            <i class="fab fa-android"></i> تحميل التطبيق (APK)
-        </a>
-        <a href="https://play.google.com/store/apps/details?id=com.btv.video.player&hl=ar" class="btn btn-sub">
-            <i class="fab fa-google-play"></i> تحميل المشغل
-        </a>
-    </div>
-
-    <div class="services-section">
-        <p style="font-size: 14px; font-weight: bold; color: var(--primary);">خدماتنا الإضافية</p>
-        <div class="nav-links">
-            <a href="albasti4u.html" class="nav-item"><i class="fas fa-link"></i> رابط بديل</a>
-            <a href="Basri_Pro_Player.html" class="nav-item"><i class="fas fa-star"></i> Basri Pro</a>
-            <a href="bsr_player.html" class="nav-item"><i class="fas fa-play-circle"></i> BTV Web</a>
+        <!-- زر إظهار كود التفعيل -->
+        <div class="activation-section">
+            <button class="btn-show" id="showActivationBtn"><i class="fas fa-key"></i> إظهار كود التفعيل</button>
+            <div id="activationCodeBox" class="hidden-code-box">
+                <p>📱 كود تفعيل التطبيق والمشغل:</p>
+                <span class="code-numbers">2025</span>
+                <p style="margin-top: 10px;">📌 أدخل هذا الكود داخل التطبيق لتفعيل البث المباشر</p>
+            </div>
         </div>
 
-        <div class="downloader-box">
-            <p style="font-size: 12px; color: var(--text-dim);">كود تطبيق Downloader للشاشات الذكية</p>
-            <span class="code-display" id="copyCode" onclick="copyText()">1962664</span>
-            <p id="msg" style="font-size: 11px; color: var(--primary);">اضغط على الكود للنسخ</p>
+        <!-- أزرار التحميل مع إعلانات ضغط -->
+        <div class="actions-group">
+            <a href="#" onclick="showAdBeforeLink(event, 'https://github.com/albasri-tv/admin/releases/download/v1.0.0/ALBASRI-TV.apk')" class="btn"><i class="fab fa-android"></i> تحميل التطبيق (APK)</a>
+            <a href="#" onclick="showAdBeforeLink(event, 'https://play.google.com/store/apps/details?id=com.btv.video.player&hl=ar')" class="btn"><i class="fab fa-google-play"></i> تحميل المشغل</a>
         </div>
-    </div>
 
-    <footer>
-        تطوير وبرمجة: علي يعقوب (ROMEO) &copy; 2026
-    </footer>
+        <!-- كودات Downloader للشاشات -->
+        <div class="downloader-section">
+            <h3>📺 تحميل للشاشات الذكية (Downloader)</h3>
+            <p>كود التطبيق: <span class="code-display" data-code="4838405" onclick="copyCode(this)">4838405</span></p>
+            <p>كود المشغل: <span class="code-display" data-code="2539087" onclick="copyCode(this)">2539087</span></p>
+            <p style="font-size: 13px;">⬅️ اضغط على أي كود لنسخه</p>
+        </div>
+
+        <!-- إعلانات إضافية متعددة -->
+        <div class="ad-grid">
+            <div class="ad-box">
+                <div id="container-c7a80e0820745172369d948cc21660f4"></div>
+            </div>
+            <div class="ad-box">
+                <script async="async" data-cfasync="false" src="https://pl29234489.profitablecpmratenetwork.com/c7a80e0820745172369d948cc21660f4/invoke.js"></script>
+            </div>
+        </div>
+
+        <footer>
+            تطوير: علي يعقوب (ROMEO) © 2026 | كود التفعيل 2025
+        </footer>
+    </div>
 </div>
 
 <script>
-    function copyText() {
-        const code = document.getElementById('copyCode').innerText;
-        navigator.clipboard.writeText(code).then(() => {
-            const msg = document.getElementById('msg');
-            msg.innerText = "تم النسخ بنجاح!";
-            msg.style.color = "#4ade80";
-            setTimeout(() => {
-                msg.innerText = "اضغط على الكود للنسخ";
-                msg.style.color = "#00d2ff";
-            }, 2000);
-        });
+    // إظهار / إخفاء كود التفعيل
+    const showBtn = document.getElementById('showActivationBtn');
+    const codeBox = document.getElementById('activationCodeBox');
+    showBtn.addEventListener('click', () => {
+        if (codeBox.style.display === 'none' || codeBox.style.display === '') {
+            codeBox.style.display = 'block';
+            showBtn.innerHTML = '<i class="fas fa-eye-slash"></i> إخفاء كود التفعيل';
+        } else {
+            codeBox.style.display = 'none';
+            showBtn.innerHTML = '<i class="fas fa-key"></i> إظهار كود التفعيل';
+        }
+    });
+    codeBox.style.display = 'none';
+
+    // وظيفة نسخ الأكواد
+    function copyCode(element) {
+        const code = element.getAttribute('data-code');
+        navigator.clipboard.writeText(code);
+        const oldText = element.innerText;
+        element.innerText = "تم النسخ! ✓";
+        setTimeout(() => {
+            element.innerText = oldText;
+        }, 1500);
+    }
+
+    // وظيفة إعلان الضغط قبل فتح أي رابط تحميل
+    function showAdBeforeLink(event, url) {
+        event.preventDefault();
+        // فتح إعلان Adsterra في نافذة جديدة
+        const adPopup = window.open('https://www.profitablecpmratenetwork.com/qpfdr41yw?key=c441ef92da21e671e0637d5eba94c831', '_blank');
+        setTimeout(() => {
+            if (adPopup) adPopup.close();
+            window.location.href = url;
+        }, 3000);
+        alert("⏳ سيتم فتح إعلان داعم ثم يتم التحميل تلقائياً خلال 3 ثواني");
     }
 </script>
-
 </body>
 </html>
